@@ -184,40 +184,45 @@
 
   <section class="card">
     <h2>Dormitorios a escala real (medidas dadas por ti)</h2>
-    <svg viewBox="-40 -50 930 370" role="img" aria-label="Dormitorios 1 y 2 a escala real">
+    <svg viewBox="-40 -50 900 370" role="img" aria-label="Dormitorios 1 y 2 a escala real, con 2.40 m entre ambos">
       <!-- pisos -->
       <rect x="6" y="51" width="283" height="219" fill="var(--floor)"/>
-      <rect x="563" y="0" width="270" height="270" fill="var(--floor)"/>
-      <!-- bloque central: baño + vestidor (medidas pendientes) -->
-      <rect x="301" y="51" width="256" height="219" fill="var(--bath)" opacity=".55"/>
-      <rect x="301" y="51" width="256" height="219" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="8 6"/>
-      <text x="429" y="140" text-anchor="middle" class="lbl">Baño + vestidor</text>
-      <text x="429" y="162" text-anchor="middle" font-size="15">(medidas por confirmar)</text>
+      <rect x="529" y="0" width="270" height="270" fill="var(--floor)"/>
+      <!-- bloque central: baño + vestidor (ancho 2.16 m útil; fondo por confirmar) -->
+      <rect x="301" y="51" width="216" height="219" fill="var(--bath)" opacity=".55"/>
+      <rect x="301" y="51" width="216" height="219" fill="none" stroke="var(--muted)" stroke-width="2" stroke-dasharray="8 6"/>
+      <text x="409.0" y="125" text-anchor="middle" class="lbl">Baño + vestidor</text>
+      <text x="409.0" y="147" text-anchor="middle" font-size="15">ancho útil 2.16 m</text>
+      <text x="409.0" y="167" text-anchor="middle" font-size="14">(fondo por confirmar)</text>
+      <!-- 2.40 m entre cuartos -->
+      <line x1="289" y1="236" x2="529" y2="236" class="dim"/>
+      <line x1="289" y1="229" x2="289" y2="243" class="dim"/><line x1="529" y1="229" x2="529" y2="243" class="dim"/>
+      <text x="409.0" y="227" text-anchor="middle" class="dimt" font-size="16">2.40 m entre cuartos</text>
 
       <!-- camas -->
       <rect x="6" y="120" width="190" height="150" rx="6" fill="#9a9a9a" stroke="#555" stroke-width="2"/>
       <rect x="6" y="120" width="34" height="150" fill="#f2f2f2" stroke="#555" stroke-width="2"/>
       <text x="108" y="190" text-anchor="middle" class="lbl">Cama 1</text>
       <text x="108" y="210" text-anchor="middle" font-size="14">1.5 × 1.9 m</text>
-      <rect x="683" y="80" width="150" height="190" rx="6" fill="#9a9a9a" stroke="#555" stroke-width="2"/>
-      <rect x="683" y="242" width="150" height="28" fill="#f2f2f2" stroke="#555" stroke-width="2"/>
-      <text x="758" y="150" text-anchor="middle" class="lbl">Cama 2</text>
-      <text x="758" y="170" text-anchor="middle" font-size="14">1.5 × 1.9 m</text>
-      <text x="758" y="190" text-anchor="middle" font-size="14">pies ↑ · espaldar ↓</text>
-      <rect x="638" y="226" width="40" height="40" fill="#b98a5e" stroke="#7a5a3a" stroke-width="2"/>
-      <text x="658" y="250" text-anchor="middle" font-size="11">noche</text>
+      <rect x="649" y="80" width="150" height="190" rx="6" fill="#9a9a9a" stroke="#555" stroke-width="2"/>
+      <rect x="649" y="242" width="150" height="28" fill="#f2f2f2" stroke="#555" stroke-width="2"/>
+      <text x="724" y="150" text-anchor="middle" class="lbl">Cama 2</text>
+      <text x="724" y="170" text-anchor="middle" font-size="14">1.5 × 1.9 m</text>
+      <text x="724" y="190" text-anchor="middle" font-size="14">pies ↑ · espaldar ↓</text>
+      <rect x="604" y="226" width="40" height="40" fill="#b98a5e" stroke="#7a5a3a" stroke-width="2"/>
+      <text x="624" y="250" text-anchor="middle" font-size="11">noche</text>
 
-      <!-- cotas del dormitorio 1 -->
+      <!-- cotas dormitorio 1 -->
       <line x1="255" y1="51" x2="255" y2="120" class="dim"/><text x="247" y="92" text-anchor="end" class="dimt" font-size="15">0.7 m</text>
       <line x1="196" y1="150" x2="289" y2="150" class="dim"/><text x="242" y="142" text-anchor="middle" class="dimt" font-size="15">0.9 m</text>
       <text x="125" y="78" text-anchor="middle" class="lbl">Dormitorio 1</text>
       <text x="125" y="98" text-anchor="middle" font-size="15" font-weight="700">2.83 × 2.19 m</text>
-      <!-- cotas del dormitorio 2 -->
-      <line x1="563" y1="150" x2="683" y2="150" class="dim"/><text x="623" y="142" text-anchor="middle" class="dimt" font-size="15">1.2 m</text>
-      <line x1="758" y1="0" x2="758" y2="80" class="dim"/><text x="766" y="44" class="dimt" font-size="15">0.8 m</text>
-      <text x="623" y="32" text-anchor="middle" font-size="17" font-weight="700">Dormitorio 2</text>
-      <text x="623" y="52" text-anchor="middle" font-size="14" font-weight="700">2.70 × 2.70 m</text>
-      <line x1="640" y1="205" x2="563" y2="205" class="dim"/><text x="600" y="197" text-anchor="middle" class="dimt" font-size="14">0.8 m</text>
+      <!-- cotas dormitorio 2 -->
+      <line x1="529" y1="150" x2="649" y2="150" class="dim"/><text x="589" y="142" text-anchor="middle" class="dimt" font-size="15">1.2 m</text>
+      <line x1="724" y1="0" x2="724" y2="80" class="dim"/><text x="732" y="44" class="dimt" font-size="15">0.8 m</text>
+      <text x="589" y="32" text-anchor="middle" font-size="17" font-weight="700">Dormitorio 2</text>
+      <text x="589" y="52" text-anchor="middle" font-size="14" font-weight="700">2.70 × 2.70 m</text>
+      <line x1="606" y1="205" x2="529" y2="205" class="dim"/><text x="566" y="197" text-anchor="middle" class="dimt" font-size="14">0.8 m</text>
 
       <!-- paredes (12 cm) -->
       <g stroke="var(--wall)" stroke-width="12" fill="none" stroke-linecap="square">
@@ -226,32 +231,32 @@
         <line x1="285" y1="45" x2="295" y2="45"/>
         <line x1="295" y1="45" x2="295" y2="180"/>
         <line x1="295" y1="260" x2="295" y2="276"/>
-        <polyline points="557,100 557,-6"/>
-        <polyline points="557,180 557,276 839,276 839,-6"/>
-        <line x1="557" y1="-6" x2="570" y2="-6"/>
-        <line x1="650" y1="-6" x2="839" y2="-6"/>
+        <polyline points="523,100 523,-6"/>
+        <polyline points="523,180 523,276 805,276 805,-6"/>
+        <line x1="523" y1="-6" x2="536" y2="-6"/>
+        <line x1="616" y1="-6" x2="805" y2="-6"/>
+        <line x1="295" y1="276" x2="523" y2="276"/>
       </g>
-      <!-- bloque central (muros dashed) -->
       <!-- ventanales -->
       <rect x="50" y="271" width="200" height="10" fill="#7ec8ee" stroke="#245" stroke-width="2"/>
       <text x="150" y="304" text-anchor="middle" font-size="14">ventanal ≈ 2.0 m (estimado)</text>
-      <rect x="658" y="271" width="200" height="10" fill="#7ec8ee" stroke="#245" stroke-width="2" transform="translate(-60,0)"/>
-      <text x="698" y="304" text-anchor="middle" font-size="14">ventanal ≈ 2.0 m (estimado)</text>
+      <rect x="564" y="271" width="200" height="10" fill="#7ec8ee" stroke="#245" stroke-width="2"/>
+      <text x="664" y="304" text-anchor="middle" font-size="14">ventanal ≈ 2.0 m (estimado)</text>
       <!-- puertas corredizas 0.8 m -->
       <g stroke="var(--ok)" stroke-width="6" stroke-dasharray="10 5">
         <line x1="205" y1="45" x2="285" y2="45"/>
         <line x1="295" y1="180" x2="295" y2="260"/>
-        <line x1="557" y1="100" x2="557" y2="180"/>
-        <line x1="570" y1="-6" x2="650" y2="-6"/>
+        <line x1="523" y1="100" x2="523" y2="180"/>
+        <line x1="536" y1="-6" x2="616" y2="-6"/>
       </g>
       <g font-size="13" font-weight="600" style="fill:var(--ok)">
         <text x="245" y="35" text-anchor="middle">puerta 0.8 m</text>
-        <text x="285" y="222" text-anchor="end">puerta 0.8 m</text>
-        <text x="569" y="94" text-anchor="start">puerta 0.8 m</text>
-        <text x="610" y="-16" text-anchor="middle">entrada 0.8 m</text>
+        <text x="285" y="222" text-anchor="end" opacity="0">.</text>
+        <text x="535" y="94" text-anchor="start">puerta 0.8 m</text>
+        <text x="576" y="-16" text-anchor="middle">entrada 0.8 m</text>
       </g>
     </svg>
-    <small>Escala real: 1 unidad del dibujo = 1 cm. Solo están medidos los dos dormitorios; el baño, el vestidor y los ventanales son estimados.</small>
+    <small>Escala real: 1 unidad del dibujo = 1 cm. Medidas reales: los dos dormitorios y los 2.40 m entre ambos. El fondo del baño y del vestidor y los ventanales son estimados.</small>
   </section>
 
   <section class="card">
@@ -260,6 +265,7 @@
       <li><b>Dormitorio 2 (2.70 × 2.70 m, medida real):</b> cama queen (1.5 × 1.9 m) con el espaldar contra el ventanal y pegada a la pared este. Deja <span class="ok">0.8 m a los pies</span> y <span class="ok">1.2 m</span> en el costado de la entrada, donde cabe una mesa de noche de 0.4 m y aún quedan 0.8 m de paso. Cabe bien: es mejor que en el dibujo anterior.</li>
       <li><b>Ventanal (~2.3 m):</b> es más ancho que la cama (1.5 m), así que queda libre ~0.4 m a cada lado del espaldar. Si el alféizar es bajo, el espaldar tapa el centro del vidrio: conviene un espaldar bajo.</li>
       <li><b>Dormitorio 1 (2.83 × 2.19 m, medida real):</b> cama queen pegada a la pared sur: <span class="ok">0.7 m</span> de pasillo al norte y ~0.9 m a los pies. Centrada dejaría solo ~0.35 m por lado, sin paso. No caben mesas de noche a ambos lados.</li>
+      <li><b>Baño + vestidor (2.40 m entre los dormitorios):</b> descontando los dos muros de 12 cm, el ancho útil es ~2.16 m. Falta el fondo de esa franja para confirmar cuánto queda para el vestidor y cuánto para el baño.</li>
       <li><b>Límite del vestidor:</b> con 0.5 m de fondo, las prendas en gancho (~0.45 m de hombros) quedan justas y el acceso desde el dormitorio mide ~0.5 m: sirve como armario con puertas corredizas, no para entrar caminando. Lo normal para colgar es 0.55–0.6 m.</li>
       <li><b>Por confirmar:</b> si esa pared es estructural, revisarla con un ingeniero antes de abrir el hueco.</li>
       <li><b>Puertas corredizas (0.8 m), cuatro en total:</b> dormitorio 1 → sala (pared superior), dormitorio 1 → baño (cerca de la ventana), baño → sala y baño → dormitorio 2. La del dormitorio 2 da al pasillo de ~1.0 m junto a la cama. Las corredizas no necesitan espacio de apertura, pero sí ~0.8 m de pared libre a un lado para correr.</li>
