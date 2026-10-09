@@ -1,123 +1,109 @@
-# Planta completa a escala real (cm). x este, y norte. Origen: esquina SO interior del dormitorio 1.
-D1W, D1H = 305, 305            # dormitorio 1 (medida real)
-D2W, D2H = 270, 270            # dormitorio 2 (medida real)
-GAP = 240                      # entre cuartos (cara interior a cara interior)
-T = 12                         # muro
-E1 = D1W                       # cara interior este del dorm 1
-X2 = D1W + GAP                 # cara interior oeste del dorm 2 (545)
-SALA_D = 270                   # fondo de la sala (medida real)
-N1 = D1H + T                   # cara exterior norte del dorm 1 (317)
-SN = N1 + SALA_D               # cara interior norte de la sala (587)
-TOP = SN + T + 66              # para voltear y
+# Planta a escala real según el plano del arquitecto (cm). x este, y norte. Origen: esquina SO interior del dormitorio 1.
+TOP = 700
 def Y(y): return TOP - y
-out = []
+o = []
 def rect(x0, y0, x1, y1, fill, stroke=None, sw=0, extra=""):
     st = f' stroke="{stroke}" stroke-width="{sw}"' if stroke else ""
-    out.append(f'<rect x="{x0}" y="{Y(y1)}" width="{x1-x0}" height="{y1-y0}" fill="{fill}"{st} {extra}/>')
+    o.append(f'<rect x="{x0}" y="{Y(y1)}" width="{x1-x0}" height="{y1-y0}" fill="{fill}"{st} {extra}/>')
 def text(x, y, s, size=14, cls="", anchor="middle", extra=""):
     c = f' class="{cls}"' if cls else ""
-    out.append(f'<text x="{x}" y="{Y(y)}" text-anchor="{anchor}" font-size="{size}"{c} {extra}>{s}</text>')
+    o.append(f'<text x="{x}" y="{Y(y)}" text-anchor="{anchor}" font-size="{size}"{c} {extra}>{s}</text>')
 def line(x0, y0, x1, y1, cls="dim", extra=""):
-    out.append(f'<line x1="{x0}" y1="{Y(y0)}" x2="{x1}" y2="{Y(y1)}" class="{cls}" {extra}/>')
-def hdim(x0, x1, y, label, real=True):
+    o.append(f'<line x1="{x0}" y1="{Y(y0)}" x2="{x1}" y2="{Y(y1)}" class="{cls}" {extra}/>')
+def hdim(x0, x1, y, label, real=True, up=8):
     cl, tc = ("dim", "dimt") if real else ("dimg", "dimgt")
     line(x0, y, x1, y, cl); line(x0, y-5, x0, y+5, cl); line(x1, y-5, x1, y+5, cl)
-    text((x0+x1)/2, y+8, label, 15, tc)
+    text((x0+x1)/2, y+up, label, 14, tc)
 def vdim(x, y0, y1, label, real=True, side=-1):
     cl, tc = ("dim", "dimt") if real else ("dimg", "dimgt")
     line(x, y0, x, y1, cl); line(x-5, y0, x+5, y0, cl); line(x-5, y1, x+5, y1, cl)
-    out.append(f'<text transform="translate({x+side*16},{Y((y0+y1)/2)}) rotate(-90)" text-anchor="middle" font-size="15" class="{tc}">{label}</text>')
+    o.append(f'<text transform="translate({x+side*14},{Y((y0+y1)/2)}) rotate(-90)" text-anchor="middle" font-size="14" class="{tc}">{label}</text>')
 FLOOR, BATH, WALL = "var(--floor)", "var(--bath)", "var(--wall)"
 W = lambda x0, y0, x1, y1: rect(x0, y0, x1, y1, WALL)
-
-# posiciones derivadas
-CL0, CL1 = E1 + T, E1 + T + 104          # vestidor / módulo izq: 317..421
-DV0, DV1 = CL1, CL1 + T                  # divisor 421..433
-RM0, RM1 = DV1, X2 - T                   # módulo der: 433..533
-SW0, SE = 100, 785                       # sala: cara interior oeste / este
-BATH_D, CLOS_D = 152, 55
-
+HATCH = '<pattern id="ach" width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 0 L0 6" stroke="#7a6a5a" stroke-width="1.6"/></pattern>'
+NN = 584                       # cara interior norte
 # ---- pisos
-rect(0, 0, D1W, D1H, FLOOR); rect(X2, 0, X2 + D2W, D2H, FLOOR)
-rect(SW0, N1, SE, SN, FLOOR)
-rect(CL0, D2H + T, SE, N1, FLOOR)
-rect(CL0, BATH_D + T + CLOS_D + T, RM1, D2H + T, FLOOR)       # sobre el vestidor
-rect(RM0, BATH_D + T, RM1, BATH_D + T + CLOS_D + T, FLOOR)    # hueco sobre el baño
-rect(X2, D2H, X2 + 80, D2H + T, FLOOR)                         # entrada dorm 2
-rect(CL0, BATH_D + T, CL1, BATH_D + T + CLOS_D, FLOOR)         # vestidor
-rect(CL0, 0, CL1, BATH_D, BATH); rect(RM0, 0, RM1, BATH_D, BATH)
+rect(0, 0, 315, 350, FLOOR)                                   # dormitorio 1 (incluye hueco de la puerta)
+rect(335, 0, 595, 180, BATH)                                  # baño
+rect(615, 0, 955, 270, FLOOR)                                 # dormitorio 2 (3.40 con el closet)
+rect(127, 370, 928, NN, FLOOR); rect(335, 200, 595, 370, FLOOR); rect(595, 290, 928, 370, FLOOR); rect(595, 200, 615, 290, FLOOR)  # sala
+# ---- escalera que se mantiene (oeste de la línea roja)
+rect(0, 370, 127, NN, "#cfcfcf", "#8a8a8a", 2); text(63, 480, "escalera", 13); text(63, 462, "(se mantiene)", 11)
+for k in range(8): line(10, 380 + k*25, 117, 380 + k*25, "dimg")
 # ---- muebles
-by0 = (D1H - 150) // 2                                         # cama 1 centrada
-rect(0, by0, 190, by0 + 150, "#9a9a9a", "#555", 2); rect(0, by0, 34, by0 + 150, "#f2f2f2", "#555", 2)
-text(112, by0 + 85, "Cama 1", 17, "lbl"); text(112, by0 + 65, "1.5 × 1.9 m", 13)
-rect(0, by0 - 46, 40, by0 - 6, "#b98a5e", "#7a5a3a", 2); rect(0, by0 + 156, 40, by0 + 196, "#b98a5e", "#7a5a3a", 2)
-b2x = X2 + D2W - 150
-rect(b2x, 0, b2x + 150, 190, "#9a9a9a", "#555", 2); rect(b2x, 0, b2x + 150, 28, "#f2f2f2", "#555", 2)
-text(b2x + 75, 105, "Cama 2", 17, "lbl"); text(b2x + 75, 85, "1.5 × 1.9 m", 13); text(b2x + 75, 66, "pies ↑ · espaldar ↓", 12)
-rect(b2x - 43, 0, b2x - 3, 40, "#b98a5e", "#7a5a3a", 2)
-n0 = SN - 90                                                   # sofá L
-rect(SW0, n0, 300, SN, "#e6dccb", "#8a7d6a", 2); rect(SW0, n0 - 130, 190, n0, "#e6dccb", "#8a7d6a", 2)
-out.append(f'<circle cx="320" cy="{Y(SN-21)}" r="15" fill="#5c8a4a"/>')
-ty = SN - 156                                                   # mesa
-rect(350, ty - 40, 490, ty + 40, "#7a5236", "#4a2f1a", 2); text(420, ty - 5, "1.4 × 0.8 m", 13, extra='style="fill:#fff"')
-for (cx0, cy0) in [(363, ty + 35), (433, ty + 35), (363, ty - 79), (433, ty - 79)]:
-    rect(cx0, cy0, cx0 + 44, cy0 + 44, "#c9bfae", "#7a6f5e", 2)
-kx = SE - 763 + 0                                               # corrimiento este
-rect(552, SN - 70, 622, SN, "#b8bcc0", "#6b7076", 2); text(587, SN - 33, "Nevera", 12)
-rect(622, SN - 60, 662, SN, "#cfc9bf", "#8a847a", 2); rect(662, SN - 60, 722, SN, "#333"); text(692, SN - 33, "Estufa", 12, extra='style="fill:#fff"')
-rect(722, SN - 60, SE, SN, "#cfc9bf", "#8a847a", 2); rect(SE - 60, SN - 190, SE, SN - 60, "#cfc9bf", "#8a847a", 2)
-rect(SE - 48, SN - 156, SE - 8, SN - 91, "#9aa4ad", "#555", 2)
-out.append(f'<rect x="560" y="{Y(SN-170)}" width="90" height="40" fill="none" stroke="#8a847a" stroke-width="2" stroke-dasharray="6 4"/>')
-text(605, SN - 155, "isla 0.9×0.4 (opcional)", 11)
+rect(0, 71, 190, 221, "#9a9a9a", "#555", 2); rect(0, 71, 34, 221, "#f2f2f2", "#555", 2); text(112, 150, "Cama 1", 16, "lbl"); text(112, 132, "1.5 × 1.9 m", 12)
+rect(1, 25, 41, 65, "#b98a5e", "#7a5a3a", 2); rect(1, 227, 41, 267, "#b98a5e", "#7a5a3a", 2)
+rect(805, 0, 955, 190, "#9a9a9a", "#555", 2); rect(805, 0, 955, 28, "#f2f2f2", "#555", 2); text(880, 105, "Cama 2", 16, "lbl"); text(880, 87, "1.5 × 1.9 m", 12)
+rect(758, 0, 798, 40, "#b98a5e", "#7a5a3a", 2)
+rect(350, 270, 550, 350, "#e6dccb", "#8a7d6a", 2); rect(350, 215, 430, 270, "#e6dccb", "#8a7d6a", 2); text(500, 310, "Sofá L", 13)  # sofá
+rect(600, 440, 740, 520, "#7a5236", "#4a2f1a", 2); text(670, 475, "mesa 1.4×0.8", 12, extra='style="fill:#fff"')
+rect(630, 524, 700, 584, "#b8bcc0", "#6b7076", 2); text(665, 554, "Nevera", 11)
+rect(700, 524, 940, 584, "#cfc9bf", "#8a847a", 2); rect(790, 524, 850, 584, "#333"); text(820, 554, "Estufa", 11, extra='style="fill:#fff"')
+rect(780, 400, 900, 440, "none", "#8a847a", 2, extra='stroke-dasharray="6 4"'); text(840, 415, "isla (opcional)", 11)
+# baño: bañera, inodoro, lavabo
+rect(340, 8, 415, 168, "#d8e0e4", "#556", 2, extra='rx="14"'); text(378, 88, "bañera", 11)
+rect(450, 8, 490, 60, "#f2f2f2", "#556", 2, extra='rx="14"'); rect(525, 8, 570, 48, "#f2f2f2", "#556", 2, extra='rx="14"')
+# closets (rayados)
+o.append(f'<rect x="0" y="{Y(350)}" width="225" height="58" fill="url(#ach)" stroke="#7a6a5a" stroke-width="2"/>'); text(112, 306, "closet 2.25×0.6", 11)
+o.append(f'<rect x="615" y="{Y(180)}" width="77" height="180" fill="url(#ach)" stroke="#7a6a5a" stroke-width="2"/>')
 # ---- paredes
-W(-T, -T, X2 + D2W + T, 0)                                      # sur
-W(-T, 0, 0, N1)                                                 # dorm 1 oeste
-W(-T, D1H, 195, N1); W(275, D1H, E1 + T, N1)                   # norte dorm 1 (puerta 195-275)
-W(E1, 0, E1 + T, 20); W(E1, 100, E1 + T, 167); W(E1, 217, E1 + T, N1)   # este dorm 1
-W(CL0, BATH_D + T + CLOS_D, DV1, BATH_D + T + CLOS_D + T)       # norte del vestidor
-W(DV0, 0, DV1, BATH_D + T + CLOS_D + T)                         # divisor
-W(E1, BATH_D, RM0 + 10, BATH_D + T); W(RM0 + 90, BATH_D, X2, BATH_D + T)   # norte del baño (puerta 443-523)
-W(X2 - T, 0, X2, 66); W(X2 - T, 146, X2, D2H + T)               # oeste dorm 2 (puerta 66-146)
-W(X2 + 80, D2H, X2 + D2W + T, D2H + T)                          # norte dorm 2 (entrada 80 cm)
-W(X2 + D2W, 0, X2 + D2W + T, D2H + T)                           # este dorm 2
-W(SW0 - T, N1, SW0, SN + T); W(SW0 - T, SN, SE + T, SN + T); W(SE, D2H + T, SE + T, SN + T)
-# ---- ventanales (estimados 2.0 m centrados)
-rect(D1W//2 - 100, -T, D1W//2 + 100, 0, "#7ec8ee", "#245", 2)
-rect(X2 + D2W//2 - 100, -T, X2 + D2W//2 + 100, 0, "#7ec8ee", "#245", 2)
-# ---- puertas corredizas
+W(-20, -20, 975, 0)                                          # sur
+W(-20, 0, 0, 370); W(-20, 350, 225, 370)                     # oeste dorm 1 + norte del closet
+W(315, 0, 335, 370)                                          # este dorm 1
+W(335, 180, 525, 200)                                        # norte del baño (puerta 70 cm: 525-595)
+W(595, 0, 615, 180); W(615, 180, 692, 200)                   # oeste dorm 2 + norte closet
+W(595, 270, 975, 290)                                        # norte dorm 2
+W(955, 0, 975, 270)                                          # este dorm 2
+W(928, 290, 948, 584); W(107, NN, 948, NN+20)               # este y norte de la sala
+# ---- elementos que se QUITAN (fantasma con X)
+GH = 'fill="none" stroke="var(--new)" stroke-width="2.5" stroke-dasharray="8 5"'
+o.append(f'<rect x="140" y="{Y(NN)}" width="160" height="100" {GH}/>')
+line(140, NN, 300, NN-100, "dim"); line(140, NN-100, 300, NN, "dim"); text(220, NN-50, "gradas 10–15", 12, "dimt", extra='style="paint-order:stroke;stroke:#fff;stroke-width:4px"'); text(220, NN-66, "(se quitan)", 12, "dimt", extra='style="paint-order:stroke;stroke:#fff;stroke-width:4px"')
+o.append(f'<rect x="476" y="{Y(NN)}" width="86" height="204" {GH}/>')
+line(476, NN, 562, NN-204, "dim"); line(476, NN-204, 562, NN, "dim"); text(519, NN-100, "pared/closet", 12, "dimt", extra='style="paint-order:stroke;stroke:#fff;stroke-width:4px"'); text(519, NN-116, "(se quita)", 12, "dimt", extra='style="paint-order:stroke;stroke:#fff;stroke-width:4px"')
+# ---- ventanas (plano)
+for (a, b) in [(80, 290), (410, 560), (690, 900)]: rect(a, -20, b, 0, "#7ec8ee", "#245", 2)
+rect(928, 300, 948, 510, "#7ec8ee", "#245", 2)
+text(185, -34, "ventana 2.10", 12); text(485, -34, "ventana 1.50", 12); text(795, -34, "ventana 2.10", 12)
+# ---- puertas
 G = 'stroke="var(--ok)" stroke-width="6" stroke-dasharray="10 5"'
-def door(x0, y0, x1, y1): out.append(f'<line x1="{x0}" y1="{Y(y0)}" x2="{x1}" y2="{Y(y1)}" {G}/>')
-door(195, D1H + 6, 275, D1H + 6); door(E1 + 6, 20, E1 + 6, 100); door(E1 + 6, 167, E1 + 6, 217)
-door(RM0 + 10, BATH_D + 6, RM0 + 90, BATH_D + 6); door(X2 - 6, 66, X2 - 6, 146); door(X2, D2H + 6, X2 + 80, D2H + 6)
+def door(x0, y0, x1, y1): o.append(f'<line x1="{x0}" y1="{Y(y0)}" x2="{x1}" y2="{Y(y1)}" {G}/>')
+door(225, 360, 315, 360); door(525, 190, 595, 190); door(605, 180, 605, 270)
 GT = 'style="fill:var(--ok)" font-weight="600"'
-text(235, D1H + 20, "puerta 0.8 m", 12, extra=GT); text(RM0 + 50, BATH_D + 18, "puerta 0.8 m", 12, extra=GT)
-text(X2 + 40, D2H + 20, "entrada 0.8 m", 12, extra=GT)
+text(270, 383, "abertura 0.90", 12, extra=GT); text(560, 207, "puerta 0.70", 12, extra=GT); text(655, 225, "puerta 0.90", 12, extra=GT, anchor="start")
+# ---- línea roja: inicio de la sala
+o.append(f'<line x1="127" y1="{Y(370)}" x2="127" y2="{Y(NN)}" stroke="var(--new)" stroke-width="4"/>')
+text(135, 395, "← inicio de la sala", 12, "dimt", anchor="start", extra='style="paint-order:stroke;stroke:#fff;stroke-width:4px"')
 # ---- rótulos
-text(141, D1H - 40, "Dormitorio 1", 18, "lbl"); text(141, D1H - 60, "3.05 × 3.05 m", 15, "dimt")
-text(X2 + 135, 245, "Dormitorio 2", 18, "lbl"); text(X2 + 135, 225, "2.70 × 2.70 m", 15, "dimt")
-for (cx, a, b) in [((CL0 + CL1)/2, "WC + lavabo", "1.04 × 1.52 m"), ((RM0 + RM1)/2, "ducha + lavabo", "1.00 × 1.52 m")]:
-    text(cx, 110, "Baño", 15, "lbl"); text(cx, 90, a, 11); text(cx, 74, b, 11)
-text((CL0 + CL1)/2, BATH_D + T + 28, "Vestidor", 12, "lbl"); text((CL0 + CL1)/2, BATH_D + T + 13, "1.04 × 0.55 m", 11)
-text(200, SN - 220, "Sala", 18, "lbl"); text(420, ty - 100, "Comedor", 16, "lbl"); text(690, SN - 215, "Cocina", 18, "lbl")
-# ---- cotas
-hdim(0, D1W, -40, "3.05 m"); hdim(D1W, X2, -40, "2.40 m entre cuartos"); hdim(X2, X2 + D2W, -40, "2.70 m")
-hdim(-T, X2 + D2W + T, -68, "≈ 8.4 m ancho total (estimado)", real=False)
-vdim(-32, 0, D1H, "3.05 m"); vdim(X2 + D2W + 30, 0, D2H, "2.70 m", side=1)
-vdim(60, N1, SN, "2.70 m fondo de la sala"); hdim(SW0, SE, SN + T + 30, "≈ 6.9 m ancho de la sala (estimado)", real=False)
-vdim(X2 + D2W + 70, -T, SN + T, "≈ 6.1 m fondo total (estimado)", real=False, side=1)
-VB_H = TOP + 68 + 14
-svg = (f'<svg viewBox="-80 0 1040 {VB_H}" role="img" aria-label="Planta completa a escala real">\n      '
-       + "\n      ".join(out) + '\n    </svg>')
-
+text(165, 262, "Dormitorio 1", 17, "lbl"); text(165, 244, "3.15 × 3.50 m", 14, "dimt")
+text(465, 100, "S.S.H.H.", 15, "lbl"); text(465, 82, "2.60 × 1.80 m", 12)
+text(790, 235, "Dormitorio 2", 17, "lbl"); text(790, 218, "3.40 × 2.70 m", 14, "dimt"); text(654, 100, "closet", 11, extra='transform="rotate(-90 654 %s)"' % Y(100))
+text(240, 360-0, "", 1)
+text(520, 270, "Estar", 17, "lbl"); text(780, 335, "Sala – comedor – cocina", 17, "lbl")
+# ---- cotas reales
+hdim(0, 315, -75, "3.15 m"); hdim(335, 595, -75, "2.60 m"); hdim(615, 955, -75, "3.40 m")
+hdim(0, 476, 650, "4.76 m"); hdim(496, 928, 650, "4.32 m")
+vdim(-45, 0, 350, "3.50 m"); vdim(990, 0, 270, "2.70 m", side=1); vdim(970, 290, NN, "2.94 m", side=1)
+svg = ('<svg viewBox="-100 0 1130 780" role="img" aria-label="Planta a escala real según el plano del arquitecto">\n      <defs>' + HATCH + '</defs>\n      '
+       + "\n      ".join(o) + '\n    </svg>')
 p = "/home/user/Pulso-app/index.html"
 s = open(p, encoding="utf-8").read()
-a = s.index('<section class="card">\n    <h2>Planta completa a escala real</h2>')
+a = s.index('<section class="card">\n    <h2>Planta según el plano del arquitecto (a escala real)</h2>')
 b = s.index('</section>', a) + len('</section>')
-new = ('<section class="card">\n    <h2>Planta completa a escala real</h2>\n    ' + svg +
-       '\n    <small>Escala real: 1 unidad = 1 cm; muros de 12 cm. <b style="color:var(--new)">En rojo</b> las medidas que me diste '
-       '(dormitorio 1 de 3.05 × 3.05 m, dormitorio 2 de 2.70 × 2.70 m, 2.40 m entre cuartos, fondo de la sala 2.70 m). <b>En gris</b> lo estimado: ancho de la sala, '
-       'fondo del baño (1.52 m) y del vestidor (0.55 m), ventanales (2.0 m), posición de puertas y muebles de la cocina. '
-       'Verde punteado = puertas corredizas de 0.8 m; el acceso al vestidor mide ~0.5 m. Con la sala más profunda sobre el dormitorio 2 (≈ 3.05 m) la isla sí cabe, dibujada como opcional.</small>\n  </section>')
+new = ('<section class="card">\n    <h2>Planta según el plano del arquitecto (a escala real)</h2>\n    ' + svg +
+       '\n    <small>Medidas del plano original (m): dormitorio 1 de 3.15 × 3.50 m con closet de 2.25 × 0.6 m; baño de 2.60 × 1.80 m; dormitorio 2 de 3.40 × 2.70 m con closet de 0.77 m; '
+       'fondo del sector norte 2.94 m; norte 4.76 + 0.20 + 4.32 m. En rojo: lo que se quita (gradas 10–15 y el closet/pared central) y la línea donde empieza la sala. '
+       'Rayado = closet. Verde = puertas y aberturas.</small>\n  </section>')
 s = s[:a] + new + s[b:]
+a2 = s.index('<h2>Qué cambia y qué revisar</h2>'); u0 = s.index('<ul>', a2); u1 = s.index('</ul>', u0) + 5
+notas = '''<ul>
+      <li><b>Se quita:</b> las gradas 10–15 y el closet/pared central (marcados con X). Con eso, el sector norte, el estar y el antiguo dormitorio de la esquina quedan como una sola sala abierta, que empieza en la línea roja (≈ 1.3 m al este del dormitorio 1).</li>
+      <li><b>Dormitorio 1 (plano):</b> 3.15 × 3.50 m con un closet de 2.25 × 0.6 m en el lado norte y una abertura de 0.90 m hacia la sala. Con cama de 1.5 × 1.9 m centrada quedan ~1.25 m a los pies.</li>
+      <li><b>Dormitorio 2 (plano):</b> 3.40 × 2.70 m con un closet de 0.77 × 1.8 m; la parte libre (≈ 2.63 × 2.70 m) coincide con tu medida de 2.70 × 2.70 m. Puerta de 0.90 m en la esquina noroeste.</li>
+      <li><b>Baño (S.S.H.H.):</b> 2.60 × 1.80 m con bañera de 1.60 m, inodoro y lavabo; ventana de 1.50 m y puerta de 0.70 m desde el estar.</li>
+      <li><b>Ventanas (plano):</b> 2.10 m en cada dormitorio y 1.50 m en el baño; ventanal de 2.10 m en el lado este de la sala.</li>
+      <li><b>Por confirmar:</b> (1) el dormitorio 1 mide 3.15 × 3.50 en el plano pero tú dijiste 3.05 × 3.05; (2) el plano da ≈ 2.1 m de fondo en el sector oeste de la sala, tú dijiste 2.70 m; (3) dónde va la cocina, porque en este plano el lado este tiene un ventanal; (4) si el sofá y el comedor van donde los dibujé.</li>
+    </ul>'''
+s = s[:u0] + notas + s[u1:]
 open(p, "w", encoding="utf-8").write(s)
-print("ok", len(out), VB_H)
+print("ok")
