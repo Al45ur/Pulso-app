@@ -40,7 +40,7 @@
 <body>
 <main>
   <h1>Distribución de cama y ventanal</h1>
-  <p class="sub">Dormitorio 2: cama con el espaldar hacia el ventanal · Dormitorio 1 sin cambios en paredes, con vestidor sobre el baño.</p>
+  <p class="sub">Dormitorio 2: cama con el espaldar hacia el ventanal · Dormitorio 1 con vestidor sobre el baño, con acceso desde el cuarto.</p>
 
   <section class="card">
     <h2>Antes (plano original con tus marcas)</h2>
@@ -97,7 +97,8 @@
         <polyline points="120,412 120,712 462,712"/>
         <line x1="120" y1="412" x2="462" y2="412"/>
         <!-- pared dorm1 / baño: se conserva solo el tramo bajo el hueco del vestidor -->
-        <line x1="462" y1="386" x2="462" y2="712"/>
+        <line x1="462" y1="386" x2="462" y2="393"/>
+        <line x1="462" y1="459" x2="462" y2="712"/>
         <!-- muro superior del baño -->
         <line x1="462" y1="466" x2="795" y2="466"/>
         <!-- divisor del baño -->
@@ -110,10 +111,11 @@
         <line x1="895" y1="412" x2="1210" y2="412"/>
       </g>
       <!-- Acceso al vestidor desde la sala (puerta corrediza) -->
-      <line x1="470" y1="386" x2="632" y2="386" stroke="var(--ok)" stroke-width="6" stroke-dasharray="14 6"/>
-      <text x="548" y="378" text-anchor="middle" font-size="14" font-weight="600" style="fill:var(--ok)">acceso desde la sala</text>
+      <line x1="462" y1="395" x2="462" y2="457" stroke="var(--ok)" stroke-width="6" stroke-dasharray="10 5"/>
+      <text x="450" y="436" text-anchor="end" font-size="14" font-weight="600" style="fill:var(--ok)">acceso desde el dormitorio →</text>
       <!-- Paredes nuevas del vestidor -->
       <g class="newwall">
+        <line x1="462" y1="386" x2="638" y2="386"/>
         <line x1="638" y1="386" x2="638" y2="466"/>
       </g>
 
@@ -135,8 +137,9 @@
     <ul>
       <li><b>Dormitorio 2:</b> cama en vertical, espaldar contra la pared del ventanal. Deja <span class="ok">~0.85 m</span> libres hacia la entrada, <span class="ok">~0.70 m</span> al lado derecho y <span class="ok">~0.45 m</span> a los pies. Cabe, pero sin espacio para mesa de noche cómoda en ambos lados.</li>
       <li><b>Ventanal:</b> mide más ancho que la cama (≈2.1 m contra 1.6 m), así que queda abierto a cada lado del espaldar. Si el alféizar es bajo, el espaldar lo tapa en el centro y hay que elegir un espaldar bajo o poner la cama separada unos centímetros.</li>
-      <li><b>Dormitorio 1:</b> <span class="ok">no se toca ninguna pared existente</span>. El hueco sobre el baño pasa a ser un vestidor de <span class="tag">~1.2 × 0.6 m</span> (profundidad estándar de armario), con muro nuevo al lado derecho y acceso desde la sala con puerta corrediza.</li>
-      <li><b>Por confirmar:</b> como la pared del dormitorio 1 se conserva, el vestidor no se abre al cuarto. ¿Lo prefieres con acceso desde la sala, o con una puerta en esa pared?</li>
+      <li><b>Dormitorio 1:</b> el hueco sobre el baño pasa a ser un vestidor de <span class="tag">~1.2 × 0.6 m</span> (profundidad estándar de armario), cerrado hacia la sala con muro nuevo. Solo se abre <span class="tag">un hueco de ~0.5 m</span> en la pared del dormitorio para dar acceso; el resto de esa pared se conserva.</li>
+      <li><b>Límite del acceso:</b> el hueco solo puede medir lo que mide la profundidad del vestidor (~0.5–0.6 m), por debajo de una puerta normal (0.7–0.8 m). Sirve como armario con puertas corredizas o cortina, pero no para entrar caminando. Para entrar hay que hacerlo más profundo o ampliar el hueco, lo que implica quitar más pared.</li>
+      <li><b>Por confirmar:</b> si esa pared es estructural, revisarla con un ingeniero antes de abrir el hueco.</li>
       <li><b>Pregunta:</b> la marca roja en la pared entre el baño y el dormitorio 2, ¿es una puerta? No la apliqué; la dejé punteada.</li>
     </ul>
   </section>
