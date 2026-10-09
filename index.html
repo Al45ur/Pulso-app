@@ -40,7 +40,7 @@
 <body>
 <main>
   <h1>Distribución de cama y ventanal</h1>
-  <p class="sub">Dormitorio 2: cama con el espaldar hacia el ventanal · Dormitorio 1 con vestidor sobre el baño, con acceso desde el cuarto.</p>
+  <p class="sub">Planta completa. Dormitorio 2: cama con el espaldar hacia el ventanal · Dormitorio 1 con vestidor sobre el baño, con acceso desde el cuarto.</p>
 
   <section class="card">
     <h2>Antes (plano original con tus marcas)</h2>
@@ -49,13 +49,32 @@
 
   <section class="card">
     <h2>Después (propuesta)</h2>
-    <svg viewBox="40 360 1250 420" role="img" aria-label="Propuesta de distribución de dormitorios 1 y 2">
+    <svg viewBox="40 40 1250 740" role="img" aria-label="Propuesta de distribución de dormitorios 1 y 2">
       <!-- Sala/comedor (zona abierta, referencia) -->
-      <rect x="130" y="365" width="1075" height="55" fill="var(--living)" opacity=".7"/>
-      <text x="1000" y="397" text-anchor="middle" class="lbl" opacity=".6">Sala / comedor (abierto)</text>
+      <rect x="252" y="54" width="913" height="368" fill="var(--floor)"/>
+      <rect x="462" y="410" width="338" height="64" fill="var(--floor)"/>
+      <!-- Sala: sofá en L -->
+      <path d="M262 95 H428 V175 H315 V325 H262 Z" fill="#e6dccb" stroke="#8a7d6a" stroke-width="2"/>
+      <text x="372" y="262" text-anchor="middle" class="lbl">Sala</text>
+      <!-- Comedor -->
+      <rect x="540" y="208" width="145" height="92" rx="6" fill="#7a5236" stroke="#4a2f1a" stroke-width="2"/>
+      <rect x="565" y="178" width="38" height="28" rx="6" fill="#c9bfae" stroke="#7a6f5e" stroke-width="2"/>
+      <rect x="625" y="178" width="38" height="28" rx="6" fill="#c9bfae" stroke="#7a6f5e" stroke-width="2"/>
+      <rect x="565" y="302" width="38" height="28" rx="6" fill="#c9bfae" stroke="#7a6f5e" stroke-width="2"/>
+      <rect x="625" y="302" width="38" height="28" rx="6" fill="#c9bfae" stroke="#7a6f5e" stroke-width="2"/>
+      <text x="612" y="358" text-anchor="middle" class="lbl">Comedor</text>
+      <!-- Cocina -->
+      <rect x="750" y="58" width="90" height="112" fill="#b8bcc0" stroke="#6b7076" stroke-width="2"/>
+      <text x="795" y="120" text-anchor="middle" font-size="14">Nevera</text>
+      <path d="M840 80 H1160 V305 H1050 V160 H840 Z" fill="#cfc9bf" stroke="#8a847a" stroke-width="2"/>
+      <rect x="905" y="82" width="70" height="80" fill="#333"/>
+      <text x="940" y="127" text-anchor="middle" font-size="13" style="fill:#fff">Estufa</text>
+      <rect x="1085" y="175" width="60" height="90" rx="4" fill="#9aa4ad" stroke="#555" stroke-width="2"/>
+      <rect x="780" y="268" width="95" height="38" fill="#bdb7ad" stroke="#8a847a" stroke-width="2"/>
+      <text x="990" y="250" text-anchor="middle" class="lbl">Cocina</text>
 
       <!-- Dormitorio 1 -->
-      <rect x="125" y="417" width="337" height="290" fill="var(--floor)"/>
+      <rect x="125" y="417" width="347" height="290" fill="var(--floor)"/>
       <!-- Vestidor (nuevo) -->
       <rect x="462" y="391" width="172" height="70" fill="var(--floor)"/>
       <rect x="462" y="391" width="172" height="70" fill="none" stroke="var(--new)" stroke-width="3" stroke-dasharray="8 5"/>
@@ -69,7 +88,7 @@
       <text x="230" y="690" text-anchor="middle" class="lbl">Dormitorio 1</text>
 
       <!-- Baño -->
-      <rect x="470" y="470" width="325" height="237" fill="var(--bath)"/>
+      <rect x="470" y="470" width="335" height="237" fill="var(--bath)"/>
       <text x="548" y="595" text-anchor="middle" class="lbl">Baño</text>
 
       <!-- Dormitorio 2 -->
@@ -93,6 +112,7 @@
 
       <!-- Paredes (esquema) -->
       <g class="wall">
+        <polyline points="250,412 250,50 1165,50 1165,412"/>
         <!-- dormitorio 1: izquierda, arriba, abajo -->
         <polyline points="120,412 120,712 462,712"/>
         <line x1="120" y1="412" x2="350" y2="412"/>
