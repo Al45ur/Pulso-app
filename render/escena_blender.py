@@ -221,7 +221,8 @@ CAMS = {
     "aerial": dict(loc=(5.0, -0.5, 11.6), tgt=(4.9, 2.9, 0.0), lens=30),
     "dorm1": dict(loc=(3.0, 0.35, 2.1), tgt=(0.6, 2.1, 0.5), lens=17),
     "dorm2": dict(loc=(6.3, 0.3, 2.1), tgt=(9.1, 1.6, 0.5), lens=16),
-    "sala": dict(loc=(8.4, 4.3, 1.7), tgt=(2.0, 5.0, 0.7), lens=17),
+    "sala": dict(loc=(2.9, 4.2, 1.65), tgt=(7.6, 5.0, 0.9), lens=16),
+    "sala2": dict(loc=(4.6, 3.9, 1.7), tgt=(1.5, 5.2, 0.6), lens=16),
     "cocina": dict(loc=(5.4, 3.3, 1.9), tgt=(8.9, 5.0, 0.9), lens=18),
 }
 c = CAMS.get(CAM) or dict(loc=tuple(float(v) for v in os.environ["CAM_LOC"].split(",")),
