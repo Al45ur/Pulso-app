@@ -9,7 +9,7 @@ DOOR_H = 2.05
 # (nombre, x0, y0, x1, y1, puertas[(a0,a1)] , ventanas[(a0,a1,z0,z1)])  -- a* sobre el eje largo del muro
 WALLS = [
     ("Pared_Sur", -20, -20, 975, 0, [], [(80, 290, 0.90, 2.10), (410, 560, 1.40, 2.10), (690, 900, 0.90, 2.10)]),
-    ("Pared_D1_Oeste", -20, 0, 0, 370, [], []),
+    ("Pared_D1_Oeste", -20, 0, 0, 350, [], []),
     ("Pared_D1_Closet_Norte", -20, 350, 225, 370, [], []),
     ("Pared_D1_Este", 315, 0, 335, 370, [(95, 165), (240, 320)], []),
     ("Pared_Banos_Norte", 335, 180, 525, 200, [], []),
