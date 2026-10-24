@@ -1,4 +1,4 @@
-"""Escena de la planta FINAL (plano del arquitecto) para renderizar con Blender (bpy) + Cycles.
+"""Escena de la planta FINAL (plano con medidas) para renderizar con Blender (bpy) + Cycles.
 
 Coordenadas en centímetros (x este, y norte, origen = esquina SO interior del dormitorio 1);
 se convierten a metros al crear la geometría. Mismo diseño que la planta de index.html.
@@ -172,6 +172,18 @@ def wall(name, x0, y0, x1, y1, notches, windows):
     return ob
 
 
+def polywall(name, pts):
+    """Muro no ortogonal: polígono en planta (cm) extruido hasta WALL_H."""
+    bm = bmesh.new()
+    f = bm.faces.new([bm.verts.new((x * C, y * C, 0.0)) for (x, y) in pts])
+    if f.normal.z < 0: f.normal_flip()
+    ext = bmesh.ops.extrude_face_region(bm, geom=[f])
+    for v in [e for e in ext["geom"] if isinstance(e, bmesh.types.BMVert)]: v.co.z = D.WALL_H
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    me = bpy.data.meshes.new(name); bm.to_mesh(me); bm.free()
+    ob = bpy.data.objects.new(name, me); link(ob); ob.data.materials.append(MAT["pared"]); return ob
+
+
 # piso (losa de madera)
 bm = bmesh.new()
 f = bm.faces.new([bm.verts.new((x * C, y * C, 0.0)) for (x, y) in D.FLOOR])
@@ -184,6 +196,8 @@ piso = bpy.data.objects.new("Piso", me); link(piso); piso.data.materials.append(
 
 for (nm, x0, y0, x1, y1, notches, windows) in D.WALLS:
     wall(nm, x0, y0, x1, y1, notches, windows)
+for (nm, pts) in D.POLYWALLS:
+    polywall(nm, pts)
 for (nm, x0, y0, x1, y1, z0, z1, mat, bevel) in D.BOXES:
     box(nm, x0, y0, x1, y1, z0, z1, mat, bevel, seg=4 if bevel >= 0.03 else 3)
 for (nm, x, y, z0, z1, r, rx, mat) in D.CYLS:
@@ -191,7 +205,7 @@ for (nm, x, y, z0, z1, r, rx, mat) in D.CYLS:
 # follaje de la planta (esferas)
 for i in range(7):
     a = i * 0.9
-    sphere("Hoja_%d" % i, 500 + 14 * math.cos(a), 566 + 14 * math.sin(a), 0.62 + 0.12 * (i % 3), 0.17, "verde", 0.7, 0.7, 1.4)
+    sphere("Hoja_%d" % i, D.PLANT_XY[0] + 14 * math.cos(a), D.PLANT_XY[1] + 14 * math.sin(a), 0.62 + 0.12 * (i % 3), 0.17, "verde", 0.7, 0.7, 1.4)
 
 # ------------------------------------------------------------------ entorno y luz
 bm = bmesh.new(); bmesh.ops.create_grid(bm, x_segments=1, y_segments=1, size=60)
@@ -218,12 +232,12 @@ sob.rotation_euler = Vector((0.55, 0.65, -0.95)).normalized().to_track_quat("-Z"
 
 # ------------------------------------------------------------------ cámara
 CAMS = {
-    "aerial": dict(loc=(5.0, -0.5, 11.6), tgt=(4.9, 2.9, 0.0), lens=30),
-    "dorm1": dict(loc=(3.0, 0.35, 2.1), tgt=(0.6, 2.1, 0.5), lens=17),
-    "dorm2": dict(loc=(7.4, 2.55, 2.0), tgt=(9.1, 0.6, 0.55), lens=16),
-    "sala": dict(loc=(4.2, -2.2, 6.8), tgt=(4.8, 4.6, 0.4), lens=24),
-    "sala2": dict(loc=(-0.9, 4.5, 4.2), tgt=(6.5, 5.0, 0.6), lens=20),
-    "cocina": dict(loc=(5.4, 3.3, 1.9), tgt=(8.9, 5.0, 0.9), lens=18),
+    "aerial": dict(loc=(4.9, -0.9, 12.0), tgt=(4.9, 3.1, 0.0), lens=30),
+    "dorm1": dict(loc=(2.9, 0.3, 2.0), tgt=(0.6, 1.6, 0.5), lens=17),
+    "dorm2": dict(loc=(9.0, 2.7, 2.0), tgt=(7.0, 0.6, 0.5), lens=16),
+    "sur": dict(loc=(4.2, -2.4, 7.0), tgt=(4.9, 4.4, 0.4), lens=24),
+    "sala": dict(loc=(0.2, 2.2, 5.6), tgt=(5.2, 5.0, 0.2), lens=22),
+    "cocina": dict(loc=(4.0, 5.2, 2.1), tgt=(8.6, 4.9, 0.9), lens=17),
 }
 c = CAMS.get(CAM) or dict(loc=tuple(float(v) for v in os.environ["CAM_LOC"].split(",")),
                          tgt=tuple(float(v) for v in os.environ["CAM_TGT"].split(",")),

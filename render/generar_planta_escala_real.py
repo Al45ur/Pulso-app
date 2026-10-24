@@ -28,14 +28,12 @@ SKIP = re.compile(r"^(Vent_|Baranda_Poste|Mesa_Pata|Mesa_Centro_Pata|Silla_.*(pa
 # pisos
 pts = " ".join(f"{x},{Y(y)}" for x, y in D.FLOOR)
 o.append(f'<polygon points="{pts}" fill="{FLOOR_C}"/>')
-rect(335, 0, 465, 180, BATH_C); rect(475, 0, 595, 180, BATH_C)
-# estantes del vestidor (E) como bloque rayado
+rect(335, 0, 460, 240, BATH_C); rect(470, 0, 595, 240, BATH_C)
 # muebles (de abajo hacia arriba)
 items = [b for b in D.BOXES if not SKIP.match(b[0])]
 items.sort(key=lambda b: (0 if b[0].startswith("Alfombra") or b[0].startswith("Baldosa") else 1, b[6]))
 for (nm, x0, y0, x1, y1, z0, z1, mat, bev) in items:
     if nm.startswith("Baldosa"): continue
-    if nm.startswith("Vest_Repisa_E") and nm != "Vest_Repisa_E1": continue
     op = ' opacity=".75"' if nm.startswith("Alfombra") else ""
     rect(x0, y0, x1, y1, COL.get(mat, "#999"), "#5a5a5a" if not nm.startswith("Alfombra") else None, 1.3, extra=op)
 for (nm, x, y, z0, z1, r, rx, mat) in D.CYLS:
@@ -43,6 +41,7 @@ for (nm, x, y, z0, z1, r, rx, mat) in D.CYLS:
     rr = max(r, rx) * 100
     o.append(f'<circle cx="{x}" cy="{Y(y)}" r="{rr:.1f}" fill="{COL.get(mat,"#999")}" stroke="#5a5a5a" stroke-width="1.2"/>')
 # paredes con huecos de puerta
+G = 'stroke="var(--ok)" stroke-width="6" stroke-dasharray="10 5"'
 for (nm, x0, y0, x1, y1, notches, windows) in D.WALLS:
     horiz = (x1 - x0) >= (y1 - y0)
     cuts = sorted(notches)
@@ -54,53 +53,46 @@ for (nm, x0, y0, x1, y1, notches, windows) in D.WALLS:
         cur = n1
     for (w0, w1, z0, z1) in windows:
         (rect(w0, y0, w1, y1, "#7ec8ee", "#245", 2) if horiz else rect(x0, w0, x1, w1, "#7ec8ee", "#245", 2))
-# escalera que se mantiene + línea roja
-rect(0, 370, 127, 584, "#cfcfcf", "#8a8a8a", 2); text(63, 480, "escalera", 13); text(63, 462, "(se mantiene)", 11)
-for k in range(8): line(10, 380 + k*25, 117, 380 + k*25, "dimg")
-o.append(f'<line x1="127" y1="{Y(370)}" x2="127" y2="{Y(584)}" stroke="var(--new)" stroke-width="4"/>')
-text(135, 395, "← inicio de la sala", 12, "dimt", anchor="start", extra='style="paint-order:stroke;stroke:#fff;stroke-width:4px"')
-# puertas / aberturas
-G = 'stroke="var(--ok)" stroke-width="6" stroke-dasharray="10 5"'
-def door(x0, y0, x1, y1): o.append(f'<line x1="{x0}" y1="{Y(y0)}" x2="{x1}" y2="{Y(y1)}" {G}/>')
-door(225, 360, 315, 360); door(325, 95, 325, 165); door(325, 240, 325, 320); door(525, 190, 595, 190); door(605, 180, 605, 270); door(605, 98, 605, 168)
+    for (n0, n1) in notches:
+        (line(n0, (y0 + y1) / 2, n1, (y0 + y1) / 2, "dim", G) if horiz else line((x0 + x1) / 2, n0, (x0 + x1) / 2, n1, "dim", G))
+for (nm, pts4) in D.POLYWALLS:
+    o.append('<polygon points="%s" fill="%s"/>' % (" ".join(f"{x},{Y(y)}" for x, y in pts4), WALL_C))
 GT = 'style="fill:var(--ok)" font-weight="600"'
-text(270, 383, "abertura 0.90", 12, extra=GT); text(309, 130, "puerta 0.70", 11, extra=GT, anchor="end"); text(309, 148, "(a baño 1)", 11, extra=GT, anchor="end")
-text(309, 280, "puerta 0.80", 11, extra=GT, anchor="end"); text(309, 263, "(a vestidor)", 11, extra=GT, anchor="end")
-text(560, 207, "puerta 0.70", 12, extra=GT); text(655, 225, "puerta 0.90", 12, extra=GT, anchor="start")
-text(628, 133, "puerta 0.70", 11, extra=GT, anchor="start"); text(628, 118, "(a baño 2)", 11, extra=GT, anchor="start")
+text(270, 350, "abertura 0.90", 12, extra=GT); text(309, 40, "puerta 0.70", 11, extra=GT, anchor="end"); text(309, 26, "(a baño 1)", 11, extra=GT, anchor="end")
+text(557, 262, "puerta 0.70", 12, extra=GT); text(660, 345, "puerta 0.90", 12, extra=GT)
+text(622, 112, "corrediza 0.70", 10, extra=GT, anchor="start"); text(622, 99, "(baño 2)", 10, extra=GT, anchor="start")
+text(842, 386, "entrada 0.90", 12, extra=GT)
 # rótulos
-text(120, 255, "Dormitorio 1", 17, "lbl"); text(120, 237, "3.15 × 3.50 m", 14, "dimt")
-text(800, 290-30, "Dormitorio 2", 17, "lbl"); text(800, 218+30-30, "3.40 × 2.70 m", 14, "dimt")
-text(400, 112, "Baño 1", 13, "lbl"); text(400, 98, "1.30 × 1.80", 11); text(535, 112, "Baño 2", 13, "lbl"); text(535, 98, "1.20 × 1.80", 11)
-text(385, 270, "Vestidor", 14, "lbl"); text(385, 254, "1.30 × 1.50", 11, "dimt")
-text(212, 340, "closet 2.25×0.6", 11); text(530, 300, "estar", 14, "lbl")
-text(335, 430, "mesa", 10); text(458, 480, "TV", 10)
-text(330, 560, "aparador", 11); text(185, 490, "sofá", 11); text(630, 480, "comedor", 12, extra='style="fill:#fff"')
-text(690, 340, "Sala – comedor – cocina", 15, "lbl"); text(900, 340, "fregadero", 11, anchor="middle")
-text(765, 553, "Nevera", 11, extra='style="fill:#222"'); text(890, 590+0, "", 1)
+text(252, 150, "Dormitorio 1", 17, "lbl"); text(252, 130, "3.15 × 3.12 m", 14, "dimt")
+text(405, 190, "Baño 1", 13, "lbl"); text(405, 175, "1.25 × 2.40", 11)
+text(545, 190, "Baño 2", 13, "lbl"); text(545, 175, "1.25 × 2.40", 11)
+text(790, 247, "Dormitorio 2", 15, "lbl"); text(790, 230, "3.47 / 3.13 × 3.12 m", 12, "dimt")
+text(240, 372, "Sala", 15, "lbl"); text(532, 600, "Comedor", 12, "lbl"); text(770, 490, "Cocina", 14, "lbl")
+text(855, 488, "fregadero", 10, extra='style="fill:#222"'); text(690, 586, "Nevera", 10, extra='style="fill:#222"')
+text(137, 400, "TV", 10); text(375, 500, "sofá", 11); text(120, 640, "", 1)
+text(640, 398, "resalto 0.70 × 0.20", 9)
 # cotas del plano
-hdim(0, 315, -75, "3.15 m"); hdim(335, 595, -75, "2.60 m"); hdim(615, 955, -75, "3.40 m")
-hdim(0, 476, 650, "4.76 m"); hdim(496, 928, 650, "4.32 m")
-vdim(-45, 0, 350, "3.50 m"); vdim(990, 0, 270, "2.70 m", side=1); vdim(970, 290, 584, "2.94 m", side=1)
+hdim(0, 315, -45, "3.15 m"); hdim(335, 460, -45, "1.25 m"); hdim(470, 595, -45, "1.25 m"); hdim(615, 962, -45, "3.47 m")
+hdim(115, 884, 655, "7.69 m")
+vdim(-45, 0, 312, "3.12 m"); vdim(1000, 0, 312, "3.12 m", side=1); vdim(70, 332, 614, "2.82 m"); vdim(940, 431, 614, "1.83 m", side=1)
 svg = ('<svg viewBox="-100 0 1130 800" role="img" aria-label="Planta final a escala real">\n      ' + "\n      ".join(o) + '\n    </svg>')
 p = "/home/user/Pulso-app/index.html"
 s = open(p, encoding="utf-8").read()
-a = s.index('<section class="card">\n    <h2>Planta final a escala real (según el plano del arquitecto)</h2>')
+a = s.index('<section class="card">\n    <h2>Planta final a escala real')
 b = s.index('</section>', a) + len('</section>')
-new = ('<section class="card">\n    <h2>Planta final a escala real (según el plano del arquitecto)</h2>\n    ' + svg +
-       '\n    <small>Medidas del plano original (m). Dos baños (1.30 y 1.20 m) en lugar de uno de 2.60 m; vestidor del dormitorio 1 (1.30 × 1.50 m); dormitorio 2 sin closet y con puerta al baño 2; '
-       'gradas, closet central y closet del dormitorio 2 quitados. Cocina al norte con fregadero y mueble junto a la ventana del lado este. Sala con sofá de 3 plazas, mueble de TV, mesa de centro y aparador; comedor de 4 puestos. '
-       'Verde punteado = puertas y aberturas. La planta se genera desde los mismos datos que el modelo de SketchUp y los renders.</small>\n  </section>')
+new = ('<section class="card">\n    <h2>Planta final a escala real (según el plano con medidas)</h2>\n    ' + svg +
+       '\n    <small>Medidas del plano con medidas (m): dormitorio 1 de 3.15 × 3.12; dos baños de 1.25 × 2.40; dormitorio 2 de 3.47 al sur y 3.13 al norte (el muro este es inclinado) × 3.12; '
+       'sala-comedor-cocina de 7.69 m de ancho (2.82 m de fondo en el sector oeste). Verde punteado = puertas y aberturas (0.90 dormitorios y entrada, 0.70 baños). '
+       'El mobiliario es una propuesta. La planta se genera desde los mismos datos que el modelo de SketchUp y los renders.</small>\n  </section>')
 s = s[:a] + new + s[b:]
 a2 = s.index('<h2>Qué cambia y qué revisar</h2>'); u0 = s.index('<ul>', a2); u1 = s.index('</ul>', u0) + 5
 notas = '''<ul>
-      <li><b>Quitado:</b> gradas 10–15, closet/pared central, closet del dormitorio 2 y el mobiliario de ejemplo anterior. La sala empieza en la línea roja (≈ 1.3 m al este del dormitorio 1).</li>
-      <li><b>Dos baños:</b> Baño 1 (1.30 × 1.80 m, del dormitorio 1) y Baño 2 (1.20 × 1.80 m) con inodoro, ducha y lavabo. El Baño 2 tiene dos puertas: al estar y al dormitorio 2.</li>
-      <li><b>Dormitorio 1:</b> puerta 2 al Baño 1 y puerta a su vestidor (1.30 × 1.50 m, con barra y repisas); además la abertura de 0.90 m a la sala. Cama de 1.5 × 1.9 m, closet de 2.25 × 0.6 m.</li>
-      <li><b>Dormitorio 2:</b> 3.40 × 2.70 m completo; cama bajo el ventanal, cómoda y mesa de noche.</li>
-      <li><b>Cocina:</b> mesón en L: al norte nevera, mesón y estufa; al este un mesón de 1.9 m con <b>fregadero y grifo bajo la ventana</b> (ventana a 1.00 m del piso para quedar sobre el mesón).</li>
-      <li><b>Sala y comedor:</b> sofá de 3 plazas con el respaldo hacia la baranda de la escalera, mesa de centro, mueble de TV de 1.6 m (a ~2.2 m del sofá), aparador y lámparas; comedor con mesa de 1.4 × 0.8 m y 4 sillas, y planta decorativa.</li>
-      <li><b>Por confirmar:</b> la ventana de la cocina (altura de antepecho real), las alturas de las ventanas (puse 0.90 m en dormitorios y 1.40 m en el baño) y el reparto exacto de los muebles.</li>
+      <li><b>Dormitorio 1</b> (3.15 × 3.12 m): puerta de 0.90 m hacia la sala, puerta de 0.70 m al Baño 1, cama con el cabecero al oeste y closet de 2.25 × 0.55 m junto al muro norte.</li>
+      <li><b>Dos baños</b> (1.25 × 2.40 m cada uno, tabique de 0.10 m): el Baño 1 se abre al dormitorio 1; el Baño 2 tiene dos puertas de 0.70 m: al estar (batiente) y al dormitorio 2 (corrediza).</li>
+      <li><b>Dormitorio 2</b> (3.47 m al sur y 3.13 m al norte × 3.12 m): el muro este del plano es inclinado y así lo dibujé. Cama con el cabecero hacia el ventanal.</li>
+      <li><b>Sala – comedor – cocina</b> (7.69 m de ancho): TV al oeste, sofá de 3 plazas como divisor, comedor de 4 puestos y cocina en L (nevera, estufa y mesón al norte; fregadero y mesón junto a la ventana del este). Entrada de 0.90 m por el este y un resalto de 0.70 × 0.20 m como en el plano.</li>
+      <li><b>No aparece en este plano</b> el vestidor del dormitorio 1 que pediste antes; lo puedo agregar sacándolo del sector de la sala.</li>
+      <li><b>Por confirmar:</b> alturas de las ventanas (0.90 m en dormitorios, 1.40 m en baños y 1.00 m en la cocina), el largo de la ventana de la cocina y el mobiliario.</li>
     </ul>'''
 s = s[:u0] + notas + s[u1:]
 open(p, "w", encoding="utf-8").write(s)
