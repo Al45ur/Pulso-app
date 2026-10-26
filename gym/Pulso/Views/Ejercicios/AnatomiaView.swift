@@ -5,9 +5,17 @@ struct AnatomiaView: View {
     let ficha: FichaEjercicio
 
     @Environment(\.dismiss) private var cerrar
-    @State private var vista: VistaCamara = .posterior
+    @State private var vista: VistaCamara
     @State private var seleccionado: Musculo?
     @State private var escena = EscenaEntrenamiento()
+
+    /// Músculos que se ven por delante: si el principal es uno de ellos, la anatomía abre de frente.
+    private static let frontales: Set<Musculo> = [.deltoidesAnterior, .pectorales, .abdomen, .cuadriceps, .biceps, .aductores]
+
+    init(ficha: FichaEjercicio) {
+        self.ficha = ficha
+        _vista = State(initialValue: ficha.principales.isDisjoint(with: Self.frontales) ? .posterior : .frontal)
+    }
 
     var body: some View {
         ScrollView {

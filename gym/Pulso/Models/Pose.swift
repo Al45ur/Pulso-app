@@ -9,9 +9,12 @@ enum Articulacion: String, CaseIterable {
 
 /// Grados. `flexion` y `abduccion` siguen la convención de Maniqui.swift
 /// (flexión positiva = hacia delante; en la rodilla, el talón hacia el glúteo).
+/// `rotacion` solo la usa el hombro: giro del brazo sobre su propio eje (positivo = rotación externa,
+/// el antebrazo flexionado sale hacia fuera). Con ella el antebrazo puede quedar vertical con el codo abierto, como en un press.
 struct Angulos: Equatable {
     var flexion: Double = 0
     var abduccion: Double = 0
+    var rotacion: Double = 0
 }
 
 /// Postura completa del cuerpo: dónde está la pelvis, cuánto se inclina y el ángulo de cada articulación.
@@ -43,7 +46,8 @@ struct Pose: Equatable {
             let q = b.angulos(articulacion)
             resultado.articulaciones[articulacion] = Angulos(
                 flexion: lerp(p.flexion, q.flexion),
-                abduccion: lerp(p.abduccion, q.abduccion))
+                abduccion: lerp(p.abduccion, q.abduccion),
+                rotacion: lerp(p.rotacion, q.rotacion))
         }
         return resultado
     }
@@ -75,13 +79,15 @@ extension Pose: Decodable {
         let crudo = try contenedor.decodeIfPresent([String: [Double]].self, forKey: .art) ?? [:]
         var articulaciones: [Articulacion: Angulos] = [:]
         for (nombre, valores) in crudo {
-            guard let articulacion = Articulacion(rawValue: nombre), (1...2).contains(valores.count) else {
+            guard let articulacion = Articulacion(rawValue: nombre), (1...3).contains(valores.count) else {
                 throw DecodingError.dataCorruptedError(
                     forKey: .art, in: contenedor,
                     debugDescription: "Articulación desconocida o con valores inválidos: \(nombre)")
             }
             articulaciones[articulacion] = Angulos(
-                flexion: valores[0], abduccion: valores.count > 1 ? valores[1] : 0)
+                flexion: valores[0],
+                abduccion: valores.count > 1 ? valores[1] : 0,
+                rotacion: valores.count > 2 ? valores[2] : 0)
         }
         self.init(posicion: raiz.pos, pitch: raiz.pitch ?? 0, articulaciones: articulaciones)
     }

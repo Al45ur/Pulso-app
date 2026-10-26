@@ -147,6 +147,32 @@ final class EscenaEntrenamiento {
                 }
                 contenedorEquipo.addChildNode(nodo)
                 equipo.append((prop, nodo))
+            case "bancoInclinado":
+                // Asiento y respaldo; el respaldo gira desde el borde trasero del asiento.
+                let nodo = SCNNode()
+                let angulo = Float((prop.angulo ?? 65) * .pi / 180)
+                let color = UIColor(red: 0.12, green: 0.17, blue: 0.24, alpha: 1)
+                let asiento = SCNBox(width: 0.32, height: 0.08, length: 0.48, chamferRadius: 0.02)
+                asiento.materials = [material(color)]
+                let nAsiento = SCNNode(geometry: asiento)
+                nAsiento.position = SCNVector3(0, Medidas.bancoAltura - 0.04, 0.06)
+                nodo.addChildNode(nAsiento)
+                let respaldo = SCNBox(width: 0.32, height: 0.8, length: 0.08, chamferRadius: 0.02)
+                respaldo.materials = [material(color)]
+                let nRespaldo = SCNNode(geometry: respaldo)
+                let direccion = SIMD3<Float>(0, sin(angulo), -cos(angulo))
+                nRespaldo.simdPosition = SIMD3<Float>(0, Medidas.bancoAltura, -0.18) + direccion * 0.4
+                nRespaldo.eulerAngles = SCNVector3(-(Float.pi / 2 - angulo), 0, 0)
+                nodo.addChildNode(nRespaldo)
+                for z: Float in [-0.12, 0.25] {
+                    let pata = SCNBox(width: 0.06, height: CGFloat(Medidas.bancoAltura - 0.08), length: 0.06, chamferRadius: 0)
+                    pata.materials = [material(UIColor(red: 0.18, green: 0.23, blue: 0.30, alpha: 1))]
+                    let nPata = SCNNode(geometry: pata)
+                    nPata.position = SCNVector3(0, (Medidas.bancoAltura - 0.08) / 2, z)
+                    nodo.addChildNode(nPata)
+                }
+                contenedorEquipo.addChildNode(nodo)
+                equipo.append((prop, nodo))
             case "cable":
                 let cilindro = SCNCylinder(radius: 0.004, height: 1)
                 cilindro.materials = [material(Paleta.cable)]

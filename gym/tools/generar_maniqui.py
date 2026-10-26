@@ -308,8 +308,17 @@ def musculos(piel):
                     fusiforme(-nz + 0.2 * nx, y, -0.155, 0.125, 0.40, 0.85), 0.013)
     r["biceps"] = ("brazo", lambda x, y, z, nx, ny, nz:
                    fusiforme(nz, y, -0.165, 0.11, 0.45, 0.88), 0.012)
-    r["deltoides"] = ("brazo", lambda x, y, z, nx, ny, nz:
-                      campana(y, -0.035, 0.10) * (0.5 + 0.5 * suave(nx, -0.2, 0.7)), 0.015)
+    # Las tres cabezas del deltoides se reparten por el ángulo de la normal alrededor del brazo
+    # (0° = lateral, +90° = frente, -90° = espalda), sin solaparse.
+    def psi(nx, nz):
+        return np.degrees(np.arctan2(nz, nx))
+
+    r["deltoides_anterior"] = ("brazo", lambda x, y, z, nx, ny, nz:
+                               campana(y, -0.035, 0.10) * suave(psi(nx, nz), 25, 45) * (1 - suave(psi(nx, nz), 115, 135)), 0.015)
+    r["deltoides_lateral"] = ("brazo", lambda x, y, z, nx, ny, nz:
+                              campana(y, -0.035, 0.10) * suave(psi(nx, nz), -45, -25) * (1 - suave(psi(nx, nz), 25, 45)), 0.016)
+    r["deltoides_posterior"] = ("brazo", lambda x, y, z, nx, ny, nz:
+                                campana(y, -0.035, 0.10) * suave(psi(nx, nz), -135, -115) * (1 - suave(psi(nx, nz), -45, -25)), 0.015)
     r["antebrazos"] = ("antebrazo", lambda x, y, z, nx, ny, nz:
                        campana(y, -0.095, 0.14) * (0.65 + 0.35 * suave(nx, -0.5, 0.6)), 0.010)
     # Tronco (origen en la columna)

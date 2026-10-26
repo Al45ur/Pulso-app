@@ -40,6 +40,12 @@ def rz(g):
     return [[c, -s, 0], [s, c, 0], [0, 0, 1]]
 
 
+def ry(g):
+    a = math.radians(g)
+    c, s = math.cos(a), math.sin(a)
+    return [[c, 0, s], [0, 1, 0], [-s, 0, c]]
+
+
 def mul(a, b):
     return [[sum(a[i][k] * b[k][j] for k in range(3)) for j in range(3)] for i in range(3)]
 
@@ -75,9 +81,9 @@ def esqueleto(pose):
     pc, Rc = nodo(p0, R0, COLUMNA, rx(flex), "columna")
     J["columna"] = pc
     for lado, s in (("I", 1), ("D", -1)):
-        # Hombro: Rx(-flex) * Rz(s*abd)
-        f, a = art(pose, "hombro" + lado)
-        ph, Rh = nodo(pc, Rc, (s * HOMBRO[0], HOMBRO[1], HOMBRO[2]), mul(rx(-f), rz(s * a)), "hombro" + lado)
+        # Hombro: Rx(-flex) * Rz(s*abd) * Ry(s*rotación); rotación positiva = externa (el antebrazo flexionado sale hacia fuera)
+        f, a, r = art(pose, "hombro" + lado, 3)
+        ph, Rh = nodo(pc, Rc, (s * HOMBRO[0], HOMBRO[1], HOMBRO[2]), mul(rx(-f), mul(rz(s * a), ry(s * r))), "hombro" + lado)
         J["hombro" + lado] = ph
         f, = art(pose, "codo" + lado, 1)
         pe, Re = nodo(ph, Rh, (0, -BRAZO, 0), rx(-f), "codo" + lado)
@@ -127,6 +133,10 @@ def props_pos(ficha, J):
             segs.append((add(m, [-0.06, 0, 0]), add(m, [0.06, 0, 0]), "barra"))
         elif t == "banco":
             segs.append(([0, BANCO_ALTURA, -0.9], [0, BANCO_ALTURA, 0.25], "banco"))
+        elif t == "bancoInclinado":
+            ang = math.radians(p.get("angulo", 65))
+            segs.append(([0, BANCO_ALTURA, -0.18], [0, BANCO_ALTURA, 0.30], "banco"))
+            segs.append(([0, BANCO_ALTURA, -0.18], [0, BANCO_ALTURA + 0.78 * math.sin(ang), -0.18 - 0.78 * math.cos(ang)], "banco"))
     return segs
 
 

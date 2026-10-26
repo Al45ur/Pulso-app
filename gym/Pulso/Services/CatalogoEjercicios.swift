@@ -9,7 +9,7 @@ struct CatalogoEjercicios {
 
     private struct Raiz: Decodable { let ejercicios: [FichaEjercicio] }
 
-    private static let tiposDeProp: Set<String> = ["cable", "barra", "banco", "mancuernas", "manija"]
+    private static let tiposDeProp: Set<String> = ["cable", "barra", "banco", "bancoInclinado", "mancuernas", "manija"]
     private static let destinosDeCable: Set<String> = ["centro", "manoI", "manoD"]
 
     static func cargar(bundle: Bundle = .main) -> CatalogoEjercicios {

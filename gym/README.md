@@ -44,13 +44,15 @@ El ejercicio elegido se mantiene entre pantallas (se navega por identificador de
 - `Pulso/Models/Pose.swift`: poses, interpolación y la línea de tiempo (cada fase pasa a la siguiente y la última vuelve a la primera).
 - `Pulso/Views/Ejercicios/`: las ocho pantallas.
 
+El deltoides tiene tres cabezas con malla propia (`deltoides_anterior`, `deltoides_lateral`, `deltoides_posterior`).
 La animación y el resaltado muscular salen de la **misma ficha**; no son dos elementos independientes.
 El resaltado marca los músculos asociados al ejercicio; **no mide activación real**.
 
 ## Cómo añadir un ejercicio
 
 1. Añade una ficha en `ejercicios.json` (copia una existente). Los músculos deben ser ids de `Musculo`.
-2. Define 2 o más fases con sus poses. Ángulos en grados: `[flexión, abducción]`; `raiz.pos` = posición de la pelvis.
+2. Define 2 o más fases con sus poses. Ángulos en grados: `[flexión, abducción, rotación]` (la rotación, opcional, solo la usa el hombro:
+   giro del brazo sobre su eje, positivo = externa); `raiz.pos` = posición de la pelvis.
 3. Comprueba las poses sin Xcode: `python3 gym/tools/verificar_poses.py /ruta/salida` (requiere Pillow).
    Dibuja cada fase de perfil y de frente e informa si los pies tocan el suelo.
 4. La app valida el JSON al cargar (`CatalogoEjercicios.validar`) y muestra el error en pantalla si algo no cuadra.
@@ -72,7 +74,7 @@ Las frases están en español: el iPhone y Siri deben estar en español.
    articulaciones redondeadas, sin cara, manos con dedos ni deformación de la piel al doblar. Para un nivel de estudio
    hace falta un personaje con esqueleto (USDZ) y malla muscular separada, con licencia comercial. `Maniqui` está aislado:
    basta con otra clase con los mismos métodos (`aplicar(_:)`, `resaltar(...)`, `manoI`, `manoD`).
-2. **Más ejercicios.** Hay 6 (4 de tríceps, 1 de piernas, 1 de hombros). Los filtros muestran solo categorías con ejercicios.
+2. **Más ejercicios.** Hay 7 (4 de tríceps, 1 de piernas, 2 de hombros). Los filtros muestran solo categorías con ejercicios.
 3. **Validación de contenido** por un entrenador: ver `pendienteValidacion` de cada ficha.
 4. **Pestañas Inicio y Perfil** del diseño de referencia: no se crearon porque no tienen función todavía.
 5. **SceneKit** está marcado como obsoleto desde iOS 26 (sigue funcionando). Si se migra a RealityKit, solo cambian

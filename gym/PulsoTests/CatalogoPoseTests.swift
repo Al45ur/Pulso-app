@@ -25,6 +25,7 @@ final class CatalogoPoseTests: XCTestCase {
         for j in Articulacion.allCases {
             XCTAssertEqual(a.angulos(j).flexion, b.angulos(j).flexion, accuracy: accuracy, "\(j)", file: file, line: line)
             XCTAssertEqual(a.angulos(j).abduccion, b.angulos(j).abduccion, accuracy: accuracy, "\(j)", file: file, line: line)
+            XCTAssertEqual(a.angulos(j).rotacion, b.angulos(j).rotacion, accuracy: accuracy, "\(j)", file: file, line: line)
         }
     }
 
@@ -33,7 +34,7 @@ final class CatalogoPoseTests: XCTestCase {
     func testElCatalogoCargaYEsValido() {
         let catalogo = CatalogoEjercicios.compartido
         XCTAssertNil(catalogo.error)
-        XCTAssertEqual(catalogo.fichas.count, 6)
+        XCTAssertEqual(catalogo.fichas.count, 7)
         XCTAssertEqual(Set(catalogo.fichas.map(\.id)).count, catalogo.fichas.count)
         XCTAssertEqual(catalogo.categorias, ["Tríceps", "Piernas", "Hombros"])
     }
@@ -50,13 +51,36 @@ final class CatalogoPoseTests: XCTestCase {
     func testLaElevacionLateralTrabajaElDeltoidesYNoElTriceps() throws {
         let ficha = try ficha("elevacion-lateral-polea-una-mano")
         XCTAssertEqual(ficha.categoria, "Hombros")
-        XCTAssertEqual(ficha.principales, [.deltoides])
-        XCTAssertEqual(ficha.secundarios, [.trapecio])
+        XCTAssertEqual(ficha.principales, [.deltoidesLateral])
+        XCTAssertEqual(ficha.secundarios, [.deltoidesAnterior, .trapecio])
         XCTAssertEqual(ficha.fases.count, 3)
         // El brazo derecho sube: abducción creciente de la primera a la última fase.
         let abducciones = ficha.fases.map { $0.pose.angulos(.hombroD).abduccion }
         XCTAssertEqual(abducciones, abducciones.sorted())
         XCTAssertGreaterThan(abducciones.last ?? 0, 80)
+    }
+
+    func testElPressDeHombrosTrabajaElDeltoidesAnteriorYUsaElGiroDelHombro() throws {
+        let ficha = try ficha("press-hombros-mancuernas-banco-inclinado")
+        XCTAssertEqual(ficha.categoria, "Hombros")
+        XCTAssertEqual(ficha.principales, [.deltoidesAnterior])
+        XCTAssertEqual(ficha.secundarios, [.triceps, .pectorales])
+        XCTAssertTrue(ficha.props.contains { $0.tipo == "bancoInclinado" && $0.angulo == 65 })
+        // El hombro del press incluye rotación externa al empezar (tercer valor de la articulación).
+        XCTAssertEqual(ficha.fases[0].pose.angulos(.hombroI).rotacion, 20, accuracy: 1e-9)
+        // El press y la elevación lateral no marcan las mismas cabezas del deltoides como principales.
+        let lateral = try self.ficha("elevacion-lateral-polea-una-mano")
+        XCTAssertTrue(ficha.principales.isDisjoint(with: lateral.principales))
+    }
+
+    func testLaRotacionDelHombroSeDecodificaYSeInterpola() throws {
+        let json = #"{"raiz":{"pos":[0,0.9,0]},"art":{"hombroI":[10,20,30]}}"#
+        let pose = try JSONDecoder().decode(Pose.self, from: Data(json.utf8))
+        XCTAssertEqual(pose.angulos(.hombroI), Angulos(flexion: 10, abduccion: 20, rotacion: 30))
+        let medio = Pose.mezclar(pose, .neutra, t: 0.5)
+        XCTAssertEqual(medio.angulos(.hombroI).rotacion, 15, accuracy: 1e-9)
+        let invalida = #"{"raiz":{"pos":[0,0.9,0]},"art":{"hombroI":[1,2,3,4]}}"#
+        XCTAssertThrowsError(try JSONDecoder().decode(Pose.self, from: Data(invalida.utf8)))
     }
 
     func testTodosLosEjerciciosDeTricepsTrabajanElTriceps() {
@@ -154,7 +178,10 @@ final class CatalogoPoseTests: XCTestCase {
             ("extension-triceps-sobre-cabeza-cuerda", 2, 0.137, 1.933, 0.371),
             ("peso-muerto-rumano-mancuernas", 1, 0.190, 0.696, 0.158),
             ("peso-muerto-rumano-mancuernas", 2, 0.190, 0.377, 0.233),
-            ("elevacion-lateral-polea-una-mano", 2, 0.274, 0.798, 0.054)
+            ("elevacion-lateral-polea-una-mano", 2, 0.274, 0.798, 0.054),
+            ("press-hombros-mancuernas-banco-inclinado", 0, 0.400, 1.142, 0.039),
+            ("press-hombros-mancuernas-banco-inclinado", 1, 0.432, 1.337, -0.173),
+            ("press-hombros-mancuernas-banco-inclinado", 2, 0.274, 1.540, -0.221)
         ]
         let maniqui = Maniqui()
         for caso in esperado {

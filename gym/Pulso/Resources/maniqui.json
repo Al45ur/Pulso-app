@@ -155,22 +155,58 @@
    "o": 1590912
   },
   {
-   "nombre": "deltoides_I",
+   "nombre": "deltoides_anterior_I",
    "junta": "hombroI",
    "rol": "musculo",
-   "musculo": "deltoides",
-   "v": 1200,
-   "i": 6852,
+   "musculo": "deltoides_anterior",
+   "v": 430,
+   "i": 2208,
    "o": 1605840
   },
   {
-   "nombre": "deltoides_D",
+   "nombre": "deltoides_anterior_D",
    "junta": "hombroD",
    "rol": "musculo",
-   "musculo": "deltoides",
-   "v": 1200,
-   "i": 6852,
-   "o": 1662048
+   "musculo": "deltoides_anterior",
+   "v": 430,
+   "i": 2208,
+   "o": 1624992
+  },
+  {
+   "nombre": "deltoides_lateral_I",
+   "junta": "hombroI",
+   "rol": "musculo",
+   "musculo": "deltoides_lateral",
+   "v": 402,
+   "i": 1968,
+   "o": 1644144
+  },
+  {
+   "nombre": "deltoides_lateral_D",
+   "junta": "hombroD",
+   "rol": "musculo",
+   "musculo": "deltoides_lateral",
+   "v": 402,
+   "i": 1968,
+   "o": 1661664
+  },
+  {
+   "nombre": "deltoides_posterior_I",
+   "junta": "hombroI",
+   "rol": "musculo",
+   "musculo": "deltoides_posterior",
+   "v": 430,
+   "i": 2211,
+   "o": 1679184
+  },
+  {
+   "nombre": "deltoides_posterior_D",
+   "junta": "hombroD",
+   "rol": "musculo",
+   "musculo": "deltoides_posterior",
+   "v": 430,
+   "i": 2211,
+   "o": 1698348
   },
   {
    "nombre": "antebrazos_I",
@@ -179,7 +215,7 @@
    "musculo": "antebrazos",
    "v": 1652,
    "i": 9564,
-   "o": 1718256
+   "o": 1717512
   },
   {
    "nombre": "antebrazos_D",
@@ -188,7 +224,7 @@
    "musculo": "antebrazos",
    "v": 1652,
    "i": 9564,
-   "o": 1796160
+   "o": 1795416
   },
   {
    "nombre": "pectorales_I",
@@ -197,7 +233,7 @@
    "musculo": "pectorales",
    "v": 196,
    "i": 924,
-   "o": 1874064
+   "o": 1873320
   },
   {
    "nombre": "pectorales_D",
@@ -206,7 +242,7 @@
    "musculo": "pectorales",
    "v": 196,
    "i": 924,
-   "o": 1882464
+   "o": 1881720
   },
   {
    "nombre": "abdomen",
@@ -215,7 +251,7 @@
    "musculo": "abdomen",
    "v": 294,
    "i": 1374,
-   "o": 1890864
+   "o": 1890120
   },
   {
    "nombre": "dorsales",
@@ -224,7 +260,7 @@
    "musculo": "dorsales",
    "v": 603,
    "i": 3060,
-   "o": 1903416
+   "o": 1902672
   },
   {
    "nombre": "trapecio",
@@ -233,7 +269,7 @@
    "musculo": "trapecio",
    "v": 426,
    "i": 2040,
-   "o": 1930128
+   "o": 1929384
   },
   {
    "nombre": "lumbar_I",
@@ -242,7 +278,7 @@
    "musculo": "lumbar",
    "v": 177,
    "i": 768,
-   "o": 1948512
+   "o": 1947768
   },
   {
    "nombre": "lumbar_D",
@@ -251,7 +287,7 @@
    "musculo": "lumbar",
    "v": 177,
    "i": 768,
-   "o": 1955832
+   "o": 1955088
   },
   {
    "nombre": "gluteos_I",
@@ -260,7 +296,7 @@
    "musculo": "gluteos",
    "v": 259,
    "i": 1254,
-   "o": 1963152
+   "o": 1962408
   },
   {
    "nombre": "gluteos_D",
@@ -269,7 +305,7 @@
    "musculo": "gluteos",
    "v": 259,
    "i": 1254,
-   "o": 1974384
+   "o": 1973640
   },
   {
    "nombre": "cuadriceps_I",
@@ -278,7 +314,7 @@
    "musculo": "cuadriceps",
    "v": 592,
    "i": 3054,
-   "o": 1985616
+   "o": 1984872
   },
   {
    "nombre": "cuadriceps_D",
@@ -287,7 +323,7 @@
    "musculo": "cuadriceps",
    "v": 592,
    "i": 3054,
-   "o": 2012040
+   "o": 2011296
   },
   {
    "nombre": "isquiotibiales_I",
@@ -296,7 +332,7 @@
    "musculo": "isquiotibiales",
    "v": 531,
    "i": 2718,
-   "o": 2038464
+   "o": 2037720
   },
   {
    "nombre": "isquiotibiales_D",
@@ -305,7 +341,7 @@
    "musculo": "isquiotibiales",
    "v": 531,
    "i": 2718,
-   "o": 2062080
+   "o": 2061336
   },
   {
    "nombre": "aductores_I",
@@ -314,7 +350,7 @@
    "musculo": "aductores",
    "v": 388,
    "i": 1944,
-   "o": 2085696
+   "o": 2084952
   },
   {
    "nombre": "aductores_D",
@@ -323,7 +359,7 @@
    "musculo": "aductores",
    "v": 388,
    "i": 1944,
-   "o": 2102784
+   "o": 2102040
   },
   {
    "nombre": "gemelos_I",
@@ -332,7 +368,7 @@
    "musculo": "gemelos",
    "v": 457,
    "i": 2322,
-   "o": 2119872
+   "o": 2119128
   },
   {
    "nombre": "gemelos_D",
@@ -341,7 +377,7 @@
    "musculo": "gemelos",
    "v": 457,
    "i": 2322,
-   "o": 2140128
+   "o": 2139384
   }
  ]
 }

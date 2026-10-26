@@ -7,6 +7,8 @@ struct PropDTO: Decodable, Hashable {
     let mano: String?
     let alargue: Double?
     let discos: Bool?
+    /// Solo para «bancoInclinado»: grados del respaldo respecto al suelo.
+    let angulo: Double?
 }
 
 struct CamaraDTO: Decodable, Hashable {

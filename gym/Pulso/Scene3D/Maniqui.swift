@@ -37,6 +37,10 @@ private func rotZ(_ grados: Double) -> simd_quatf {
     simd_quatf(angle: Float(grados * .pi / 180), axis: SIMD3<Float>(0, 0, 1))
 }
 
+private func rotY(_ grados: Double) -> simd_quatf {
+    simd_quatf(angle: Float(grados * .pi / 180), axis: SIMD3<Float>(0, 1, 0))
+}
+
 /// Maniquí humano articulado. Cada articulación es un nodo; al aplicar una `Pose` se giran los nodos,
 /// no se deforma ninguna imagen. Los volúmenes musculares son nodos con nombre «musculo:<id>».
 ///
@@ -83,9 +87,13 @@ final class Maniqui {
         switch articulacion {
         case .columna, .cuello:
             return rotX(a.flexion)
-        case .hombroI, .caderaI:
+        case .hombroI:
+            return rotX(-a.flexion) * rotZ(a.abduccion) * rotY(a.rotacion)
+        case .hombroD:
+            return rotX(-a.flexion) * rotZ(-a.abduccion) * rotY(-a.rotacion)
+        case .caderaI:
             return rotX(-a.flexion) * rotZ(a.abduccion)
-        case .hombroD, .caderaD:
+        case .caderaD:
             return rotX(-a.flexion) * rotZ(-a.abduccion)
         case .codoI, .codoD, .tobilloI, .tobilloD:
             return rotX(-a.flexion)
@@ -267,7 +275,9 @@ final class Maniqui {
         let h = nodoDe(hombro)
         forma(SCNSphere(radius: 0.05), en: h, pos: .zero)
         forma(capsula(0.04, CGFloat(Medidas.brazo)), en: h, pos: SIMD3<Float>(0, -Medidas.brazo / 2, 0))
-        musculo(.deltoides, SCNSphere(radius: 0.055), en: h, pos: SIMD3<Float>(lado * 0.01, -0.01, 0))
+        musculo(.deltoidesAnterior, SCNSphere(radius: 0.04), en: h, pos: SIMD3<Float>(lado * 0.01, -0.01, 0.035))
+        musculo(.deltoidesLateral, SCNSphere(radius: 0.04), en: h, pos: SIMD3<Float>(lado * 0.045, -0.01, 0))
+        musculo(.deltoidesPosterior, SCNSphere(radius: 0.04), en: h, pos: SIMD3<Float>(lado * 0.01, -0.01, -0.035))
         musculo(.triceps, capsula(0.032, 0.22), en: h, pos: SIMD3<Float>(0, -0.15, -0.032))
         musculo(.biceps, capsula(0.030, 0.20), en: h, pos: SIMD3<Float>(0, -0.15, 0.032))
 

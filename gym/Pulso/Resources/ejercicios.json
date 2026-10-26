@@ -365,8 +365,8 @@
       "nombre": "Elevación lateral en polea a una mano",
       "categoria": "Hombros",
       "equipo": "Polea baja, agarre individual",
-      "musculosPrincipales": ["deltoides"],
-      "musculosSecundarios": ["trapecio"],
+      "musculosPrincipales": ["deltoides_lateral"],
+      "musculosSecundarios": ["deltoides_anterior", "trapecio"],
       "descripcion": "Elevación del brazo hacia el lado con la polea baja. Trabaja sobre todo la parte lateral (media) del deltoides, la que da anchura al hombro. La polea ofrece resistencia desde el inicio del recorrido.",
       "pasos": [
         "Coloca la polea en su posición más baja y engancha un agarre individual.",
@@ -430,6 +430,80 @@
         "Los músculos secundarios (trapecio, deltoides anterior, supraespinoso) vienen de blogs de entrenamiento, no de estudios. El modelo resalta todo el deltoides y no representa el supraespinoso.",
         "Un estudio de 2025 (24 personas) no encontró diferencias de crecimiento entre polea y mancuernas: la polea es una opción, no una mejora demostrada.",
         "Mezcla las técnicas de dos reels (@ricardoelias_aest y @juniorworkout_); si difieren, validar con un entrenador."
+      ]
+    },
+    {
+      "id": "press-hombros-mancuernas-banco-inclinado",
+      "nombre": "Press de hombros con mancuernas en banco inclinado",
+      "categoria": "Hombros",
+      "equipo": "Banco inclinado (respaldo alto), mancuernas",
+      "musculosPrincipales": ["deltoides_anterior"],
+      "musculosSecundarios": ["triceps", "pectorales"],
+      "descripcion": "Press por encima de la cabeza sentado en un banco muy inclinado, con una mancuerna en cada mano. Trabaja sobre todo la parte frontal del deltoides; el tríceps y la parte alta del pecho ayudan. Cuanto más inclinado está el respaldo, más se parece a un press de hombros.",
+      "pasos": [
+        "Ajusta el respaldo a una inclinación alta y siéntate con la espalda y la cabeza apoyadas.",
+        "Sujeta una mancuerna en cada mano a la altura de los hombros, con las muñecas rectas y apiladas sobre los antebrazos, y las palmas al frente.",
+        "Con el abdomen firme y los omóplatos hacia abajo y atrás, empuja las mancuernas hacia arriba hasta estirar los brazos sin bloquear los codos.",
+        "Baja de forma controlada hasta que las mancuernas queden otra vez a la altura de los hombros."
+      ],
+      "errores": [
+        "Abrir los codos hacia los lados en exceso: puede provocar pinzamiento del hombro.",
+        "Arquear la zona lumbar para ayudarte a subir.",
+        "Encoger los hombros hacia las orejas.",
+        "Doblar las muñecas hacia atrás en lugar de mantenerlas apiladas sobre los antebrazos.",
+        "Usar demasiado peso y perder el control de la bajada."
+      ],
+      "seguridad": [
+        "Empieza con los codos a unos 30–45° del torso (plano escapular) y deja que se abran un poco al subir.",
+        "Mantén el abdomen firme y la columna neutra durante todo el movimiento.",
+        "Empieza con poco peso y aumenta de forma progresiva.",
+        "Si sientes dolor en el hombro, detente."
+      ],
+      "series": 3, "repsMin": 8, "repsMax": 12, "descansoSeg": 90,
+      "props": [
+        { "tipo": "bancoInclinado", "angulo": 65 },
+        { "tipo": "mancuernas" }
+      ],
+      "camara": { "azimut": 60, "altura": 1.1, "distancia": 3.4, "objetivoY": 0.8, "semiancho": 0.9 },
+      "faseMiniatura": 2,
+      "fases": [
+        {
+          "nombre": "Inicio",
+          "descripcion": "Mancuernas a la altura de los hombros, antebrazos verticales, palmas al frente y abdomen firme.",
+          "pose": {
+            "raiz": { "pos": [0, 0.48, 0], "pitch": 0 },
+            "art": {
+              "columna": [-25], "cuello": [25], "hombroI": [40, 35, 20], "hombroD": [40, 35, 20], "codoI": [105], "codoD": [105], "caderaI": [90, 3], "caderaD": [90, 3], "rodillaI": [90], "rodillaD": [90], "tobilloI": [0], "tobilloD": [0]
+            }
+          }
+        },
+        {
+          "nombre": "Ejecución",
+          "descripcion": "Empuja hacia arriba y ligeramente hacia dentro, con las muñecas rectas sobre los antebrazos.",
+          "pose": {
+            "raiz": { "pos": [0, 0.48, 0], "pitch": 0 },
+            "art": {
+              "columna": [-25], "cuello": [25], "hombroI": [-5, 110, 60], "hombroD": [-5, 110, 60], "codoI": [80], "codoD": [80], "caderaI": [90, 3], "caderaD": [90, 3], "rodillaI": [90], "rodillaD": [90], "tobilloI": [0], "tobilloD": [0]
+            }
+          }
+        },
+        {
+          "nombre": "Final",
+          "descripcion": "Brazos casi estirados sobre los hombros, sin bloquear los codos. Baja de forma controlada.",
+          "pose": {
+            "raiz": { "pos": [0, 0.48, 0], "pitch": 0 },
+            "art": {
+              "columna": [-25], "cuello": [25], "hombroI": [-18, 172, 0], "hombroD": [-18, 172, 0], "codoI": [8], "codoD": [8], "caderaI": [90, 3], "caderaD": [90, 3], "rodillaI": [90], "rodillaD": [90], "tobilloI": [0], "tobilloD": [0]
+            }
+          }
+        }
+      ],
+      "pendienteValidacion": [
+        "Series, repeticiones y descanso son valores sugeridos (el reel no los indica).",
+        "El reel abre los codos más que los 30–45° que recomiendan las guías; el modelo parte de unos 65° respecto al torso como punto intermedio. Validar con un entrenador.",
+        "Las guías de «press inclinado» hablan sobre todo de pecho (30–45°). Aquí se asume un respaldo muy inclinado (~65°), donde el trabajo se desplaza a los hombros: varios estudios coinciden en que el deltoides anterior trabaja más al aumentar la inclinación, pero no encontré uno de press sentado a 60–70°.",
+        "El trapecio y el serrato aparecen en algunas fuentes con poco respaldo; no se marcan.",
+        "Los subtítulos del reel están incompletos, así que la técnica exacta de @dui.delgado (codos, rango, ritmo) debe validarse."
       ]
     }
   ]

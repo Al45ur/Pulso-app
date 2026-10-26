@@ -74,7 +74,7 @@ struct DetalleEjercicioView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             escenaModelo.configurar(ficha: ficha)
-            escenaAnatomia.configurarAnatomia(ficha: ficha, vista: .posterior)
+            escenaAnatomia.configurarAnatomia(ficha: ficha, vista: ficha.principales.isDisjoint(with: [.deltoidesAnterior, .pectorales, .abdomen, .cuadriceps, .biceps, .aductores]) ? .posterior : .frontal)
         }
         .onChange(of: config) { _, nueva in nueva.guardar(ficha) }
     }

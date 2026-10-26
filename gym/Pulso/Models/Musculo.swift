@@ -6,8 +6,12 @@ enum RolMuscular {
 
 /// Músculos que la app sabe dibujar y explicar. El `rawValue` es el identificador usado en ejercicios.json.
 enum Musculo: String, CaseIterable, Identifiable, Decodable {
-    case triceps, biceps, deltoides, pectorales, dorsales, trapecio, lumbar, abdomen
+    case triceps, biceps, pectorales, dorsales, trapecio, lumbar, abdomen
     case gluteos, cuadriceps, isquiotibiales, gemelos, antebrazos, aductores
+    // Las tres cabezas del deltoides tienen su propia malla y su propio identificador en ejercicios.json.
+    case deltoidesAnterior = "deltoides_anterior"
+    case deltoidesLateral = "deltoides_lateral"
+    case deltoidesPosterior = "deltoides_posterior"
 
     var id: String { rawValue }
 
@@ -15,7 +19,9 @@ enum Musculo: String, CaseIterable, Identifiable, Decodable {
         switch self {
         case .triceps: return "Tríceps"
         case .biceps: return "Bíceps"
-        case .deltoides: return "Deltoides"
+        case .deltoidesAnterior: return "Deltoides anterior"
+        case .deltoidesLateral: return "Deltoides lateral"
+        case .deltoidesPosterior: return "Deltoides posterior"
         case .pectorales: return "Pectorales"
         case .dorsales: return "Dorsales"
         case .trapecio: return "Trapecio"
@@ -37,8 +43,12 @@ enum Musculo: String, CaseIterable, Identifiable, Decodable {
             return "Tríceps braquial. Ocupa la parte posterior del brazo y extiende el codo. Tiene tres cabezas (larga, lateral y medial); la larga también cruza el hombro."
         case .biceps:
             return "Bíceps braquial. Parte frontal del brazo; flexiona el codo y gira el antebrazo."
-        case .deltoides:
-            return "Deltoides. Cubre el hombro y levanta el brazo en distintas direcciones."
+        case .deltoidesAnterior:
+            return "Deltoides anterior. Parte frontal del hombro; levanta el brazo hacia delante y participa en los press."
+        case .deltoidesLateral:
+            return "Deltoides lateral. Parte externa del hombro; separa el brazo hacia el lado y da anchura al hombro."
+        case .deltoidesPosterior:
+            return "Deltoides posterior. Parte trasera del hombro; lleva el brazo hacia atrás y abre los hombros."
         case .pectorales:
             return "Pectorales. Músculos del pecho; acercan el brazo al cuerpo y lo empujan hacia delante."
         case .dorsales:
