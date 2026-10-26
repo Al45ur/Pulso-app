@@ -1,0 +1,364 @@
+{
+  "version": 1,
+  "ejercicios": [
+    {
+      "id": "jalon-triceps-barra-recta",
+      "nombre": "Jalón de tríceps con barra recta",
+      "categoria": "Tríceps",
+      "equipo": "Polea alta, barra recta",
+      "musculosPrincipales": ["triceps"],
+      "musculosSecundarios": [],
+      "descripcion": "Extensión de codo en polea alta con agarre por encima. Con los codos fijos junto al cuerpo, el tríceps es el responsable de empujar la barra hacia abajo.",
+      "pasos": [
+        "Agarre por encima (palmas hacia abajo), pies al ancho de hombros y rodillas ligeramente flexionadas.",
+        "Codos pegados a los costados y antebrazos paralelos al suelo al empezar.",
+        "Extiende solo los codos hasta estirar los brazos, sin bloquearlos.",
+        "Sube la barra despacio manteniendo la tensión en el tríceps."
+      ],
+      "errores": [
+        "Demasiado peso: el cuerpo se balancea y trabajan los hombros.",
+        "Inclinarte hacia delante o arquear la espalda (si te inclinas, hazlo desde la cadera)."
+      ],
+      "seguridad": [
+        "Elige un peso con el que los codos no se despeguen del cuerpo.",
+        "Mantén el abdomen firme y la espalda recta."
+      ],
+      "series": 3, "repsMin": 8, "repsMax": 12, "descansoSeg": 90,
+      "props": [
+        { "tipo": "cable", "ancla": [0, 2.2, 0.1], "hacia": "centro" },
+        { "tipo": "barra", "alargue": 0.06 }
+      ],
+      "camara": { "azimut": 50, "altura": 1.1, "distancia": 3.3, "objetivoY": 0.95 },
+      "faseMiniatura": 1,
+      "fases": [
+        {
+          "nombre": "Inicio",
+          "descripcion": "Codos pegados al cuerpo y flexionados unos 90°, con la barra a la altura del pecho.",
+          "pose": {
+            "raiz": { "pos": [0, 0.899, 0], "pitch": 0 },
+            "art": {
+              "columna": [10], "hombroI": [10, 0], "hombroD": [10, 0],
+              "codoI": [95], "codoD": [95],
+              "caderaI": [3, 0], "caderaD": [3, 0], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        },
+        {
+          "nombre": "Ejecución",
+          "descripcion": "Empuja la barra hacia abajo extendiendo los codos; los brazos no se mueven.",
+          "pose": {
+            "raiz": { "pos": [0, 0.899, 0], "pitch": 0 },
+            "art": {
+              "columna": [10], "hombroI": [10, 0], "hombroD": [10, 0],
+              "codoI": [50], "codoD": [50],
+              "caderaI": [3, 0], "caderaD": [3, 0], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        },
+        {
+          "nombre": "Final",
+          "descripcion": "Brazos casi rectos, sin bloquear los codos. Mantén un instante y vuelve controlando.",
+          "pose": {
+            "raiz": { "pos": [0, 0.899, 0], "pitch": 0 },
+            "art": {
+              "columna": [10], "hombroI": [10, 0], "hombroD": [10, 0],
+              "codoI": [8], "codoD": [8],
+              "caderaI": [3, 0], "caderaD": [3, 0], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        }
+      ],
+      "pendienteValidacion": [
+        "Series, repeticiones y descanso son valores sugeridos (el reel no los indica).",
+        "No se representan músculos estabilizadores (antebrazo, core, hombro) porque las fuentes no coinciden en su importancia."
+      ]
+    },
+    {
+      "id": "extension-triceps-acostado-barra",
+      "nombre": "Extensión de tríceps acostado con barra",
+      "categoria": "Tríceps",
+      "equipo": "Banco plano, barra (la barra Z cuida muñecas y codos)",
+      "musculosPrincipales": ["triceps"],
+      "musculosSecundarios": [],
+      "descripcion": "Extensión de codos con el cuerpo tumbado en un banco. Al bajar la barra hacia la frente el tríceps se estira, y al subir la empuja de vuelta.",
+      "pasos": [
+        "Acostado en el banco, sostén la barra con los brazos extendidos sobre el pecho.",
+        "Mantén los codos apuntando al frente, sin abrirlos.",
+        "Baja la barra despacio hasta unos 2–3 cm de la frente.",
+        "Extiende los codos para subir sin bloquearlos arriba."
+      ],
+      "errores": [
+        "Abrir los codos hacia los lados.",
+        "Bloquear los codos arriba: se pierde tensión en el tríceps.",
+        "Llevar los codos demasiado atrás: entran los dorsales."
+      ],
+      "seguridad": [
+        "Usa una barra Z si te molestan las muñecas o los codos.",
+        "Si sientes dolor de codo, prueba un ángulo distinto o cambia la posición de los codos.",
+        "Pide un apoyo (spotter) cuando uses cargas altas: la barra pasa cerca de la cara."
+      ],
+      "series": 3, "repsMin": 8, "repsMax": 12, "descansoSeg": 90,
+      "props": [
+        { "tipo": "banco" },
+        { "tipo": "barra", "alargue": 0.28, "discos": true }
+      ],
+      "camara": { "azimut": 90, "altura": 1.0, "distancia": 3.3, "objetivoY": 0.7 },
+      "faseMiniatura": 2,
+      "fases": [
+        {
+          "nombre": "Inicio",
+          "descripcion": "Acostado, brazos extendidos y la barra sobre el pecho.",
+          "pose": {
+            "raiz": { "pos": [0, 0.474, 0], "pitch": -90 },
+            "art": {
+              "hombroI": [90, 0], "hombroD": [90, 0], "codoI": [5], "codoD": [5],
+              "rodillaI": [100], "rodillaD": [100], "tobilloI": [10], "tobilloD": [10]
+            }
+          }
+        },
+        {
+          "nombre": "Ejecución",
+          "descripcion": "Baja la barra flexionando solo los codos; los brazos se quedan quietos.",
+          "pose": {
+            "raiz": { "pos": [0, 0.474, 0], "pitch": -90 },
+            "art": {
+              "hombroI": [90, 0], "hombroD": [90, 0], "codoI": [55], "codoD": [55],
+              "rodillaI": [100], "rodillaD": [100], "tobilloI": [10], "tobilloD": [10]
+            }
+          }
+        },
+        {
+          "nombre": "Final",
+          "descripcion": "La barra queda a unos centímetros de la frente. Extiende los codos para volver.",
+          "pose": {
+            "raiz": { "pos": [0, 0.474, 0], "pitch": -90 },
+            "art": {
+              "hombroI": [90, 0], "hombroD": [90, 0], "codoI": [105], "codoD": [105],
+              "rodillaI": [100], "rodillaD": [100], "tobilloI": [10], "tobilloD": [10]
+            }
+          }
+        }
+      ],
+      "pendienteValidacion": [
+        "Series, repeticiones y descanso son valores sugeridos (el reel no los indica).",
+        "Las fuentes aceptan un pequeño desplazamiento de los codos hacia la cabeza al bajar; el modelo los mantiene fijos."
+      ]
+    },
+    {
+      "id": "extension-triceps-sobre-cabeza-cuerda",
+      "nombre": "Extensión de tríceps sobre la cabeza con cuerda",
+      "categoria": "Tríceps",
+      "equipo": "Polea, cuerda",
+      "musculosPrincipales": ["triceps"],
+      "musculosSecundarios": [],
+      "descripcion": "Extensión de codos con los brazos por encima de la cabeza. Esta posición estira la cabeza larga del tríceps, la que cruza el hombro.",
+      "pasos": [
+        "De espaldas a la polea, sostén la cuerda con ambas manos detrás de la cabeza.",
+        "Codos hacia delante y cerca de la cabeza; el tronco estable.",
+        "Extiende los codos hasta estirar los brazos por encima de la cabeza.",
+        "Vuelve controlando el estiramiento."
+      ],
+      "errores": [
+        "Mover los codos hacia afuera o hacia atrás.",
+        "Impulsarte con el tronco en lugar de usar el tríceps."
+      ],
+      "seguridad": [
+        "Mantén el abdomen firme para no arquear la zona lumbar.",
+        "Empieza con poco peso: el hombro trabaja en una posición exigente."
+      ],
+      "series": 3, "repsMin": 10, "repsMax": 12, "descansoSeg": 60,
+      "props": [
+        { "tipo": "cable", "ancla": [0, 0.35, -0.9], "hacia": "centro" },
+        { "tipo": "barra", "alargue": 0.05 }
+      ],
+      "camara": { "azimut": 60, "altura": 1.2, "distancia": 3.6, "objetivoY": 1.0 },
+      "faseMiniatura": 2,
+      "fases": [
+        {
+          "nombre": "Inicio",
+          "descripcion": "Codos flexionados y la cuerda detrás de la cabeza: el tríceps queda estirado.",
+          "pose": {
+            "raiz": { "pos": [0, 0.899, 0], "pitch": 0 },
+            "art": {
+              "columna": [15], "hombroI": [165, -5], "hombroD": [165, -5],
+              "codoI": [125], "codoD": [125],
+              "caderaI": [3, 0], "caderaD": [3, 0], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        },
+        {
+          "nombre": "Ejecución",
+          "descripcion": "Extiende los codos hacia arriba sin mover los brazos ni el tronco.",
+          "pose": {
+            "raiz": { "pos": [0, 0.899, 0], "pitch": 0 },
+            "art": {
+              "columna": [15], "hombroI": [165, -5], "hombroD": [165, -5],
+              "codoI": [70], "codoD": [70],
+              "caderaI": [3, 0], "caderaD": [3, 0], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        },
+        {
+          "nombre": "Final",
+          "descripcion": "Brazos casi estirados por encima de la cabeza, sin bloquear los codos.",
+          "pose": {
+            "raiz": { "pos": [0, 0.899, 0], "pitch": 0 },
+            "art": {
+              "columna": [15], "hombroI": [165, -5], "hombroD": [165, -5],
+              "codoI": [10], "codoD": [10],
+              "caderaI": [3, 0], "caderaD": [3, 0], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        }
+      ],
+      "pendienteValidacion": [
+        "Series, repeticiones y descanso son valores sugeridos (el reel no los indica).",
+        "El énfasis en la cabeza larga viene de un estudio pequeño (21 personas) con críticas; es una buena razón para incluirlo, no una prueba de que sea el mejor ejercicio."
+      ]
+    },
+    {
+      "id": "jalon-triceps-una-mano",
+      "nombre": "Jalón de tríceps a una mano",
+      "categoria": "Tríceps",
+      "equipo": "Polea alta, agarre individual",
+      "musculosPrincipales": ["triceps"],
+      "musculosSecundarios": [],
+      "descripcion": "Variante del jalón de tríceps con un brazo a la vez, que permite concentrarse en cada lado por separado.",
+      "pasos": [
+        "Agarra la polea con una mano, el codo pegado al costado.",
+        "Extiende el codo hacia abajo sin mover el hombro.",
+        "Mantén la posición final y sube controlando unos 2 segundos."
+      ],
+      "errores": [
+        "Separar el codo del cuerpo.",
+        "Soltar la polea sin control al subir."
+      ],
+      "seguridad": [
+        "Haz las mismas series con ambos brazos.",
+        "Usa un peso que puedas controlar al subir."
+      ],
+      "series": 3, "repsMin": 10, "repsMax": 12, "descansoSeg": 60,
+      "props": [
+        { "tipo": "cable", "ancla": [0.2, 2.2, 0.15], "hacia": "manoD" },
+        { "tipo": "manija", "mano": "D" }
+      ],
+      "camara": { "azimut": 50, "altura": 1.1, "distancia": 3.3, "objetivoY": 0.95 },
+      "faseMiniatura": 1,
+      "fases": [
+        {
+          "nombre": "Inicio",
+          "descripcion": "Codo pegado al costado y flexionado unos 90°.",
+          "pose": {
+            "raiz": { "pos": [0, 0.899, 0], "pitch": 0 },
+            "art": {
+              "columna": [10], "hombroI": [10, 0], "hombroD": [10, 0],
+              "codoI": [5], "codoD": [95],
+              "caderaI": [3, 0], "caderaD": [3, 0], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        },
+        {
+          "nombre": "Ejecución",
+          "descripcion": "Extiende el codo empujando hacia abajo; el hombro no se mueve.",
+          "pose": {
+            "raiz": { "pos": [0, 0.899, 0], "pitch": 0 },
+            "art": {
+              "columna": [10], "hombroI": [10, 0], "hombroD": [10, 0],
+              "codoI": [5], "codoD": [50],
+              "caderaI": [3, 0], "caderaD": [3, 0], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        },
+        {
+          "nombre": "Final",
+          "descripcion": "Brazo casi recto. Mantén y sube controlando unos 2 segundos.",
+          "pose": {
+            "raiz": { "pos": [0, 0.899, 0], "pitch": 0 },
+            "art": {
+              "columna": [10], "hombroI": [10, 0], "hombroD": [10, 0],
+              "codoI": [5], "codoD": [8],
+              "caderaI": [3, 0], "caderaD": [3, 0], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        }
+      ],
+      "pendienteValidacion": [
+        "El reel no muestra con claridad el implemento de este ejercicio; se describe como jalón con agarre individual. Validar con la persona que lo hizo o con un entrenador.",
+        "Series, repeticiones y descanso son valores sugeridos.",
+        "La animación mueve el brazo derecho; el izquierdo queda en reposo."
+      ]
+    },
+    {
+      "id": "peso-muerto-rumano-mancuernas",
+      "nombre": "Peso muerto rumano con mancuernas",
+      "categoria": "Piernas",
+      "equipo": "Mancuernas",
+      "musculosPrincipales": ["isquiotibiales", "gluteos"],
+      "musculosSecundarios": ["lumbar", "aductores"],
+      "descripcion": "Bisagra de cadera: la cadera va hacia atrás y el torso se inclina con la espalda neutra. Los isquiotibiales y los glúteos trabajan más en la parte baja, cuando están estirados.",
+      "pasos": [
+        "De pie, pies al ancho de cadera, rodillas ligeramente flexionadas y mancuernas frente a los muslos.",
+        "Lleva la cadera hacia atrás mientras el torso se inclina hacia delante con la espalda neutra.",
+        "Baja las mancuernas pegadas a las piernas hasta sentir el estiramiento en los isquiotibiales; el límite lo marca tu flexibilidad.",
+        "Sube empujando con los talones y llevando la cadera hacia delante; aprieta los glúteos arriba sin arquear la zona lumbar."
+      ],
+      "errores": [
+        "Redondear la espalda: es el error más común y el más arriesgado.",
+        "Flexionar demasiado las rodillas: se convierte en un peso muerto convencional.",
+        "Alejar las mancuernas del cuerpo.",
+        "Bloquear las rodillas, o usar impulso para subir."
+      ],
+      "seguridad": [
+        "Practica la bisagra de cadera sin peso antes de cargar.",
+        "Empieza ligero y deja unas repeticiones de reserva.",
+        "Baja solo hasta donde puedas mantener la espalda neutra."
+      ],
+      "series": 3, "repsMin": 8, "repsMax": 12, "descansoSeg": 90,
+      "props": [
+        { "tipo": "mancuernas" }
+      ],
+      "camara": { "azimut": 90, "altura": 1.0, "distancia": 3.4, "objetivoY": 0.8 },
+      "faseMiniatura": 2,
+      "fases": [
+        {
+          "nombre": "Inicio",
+          "descripcion": "De pie, rodillas ligeramente flexionadas y las mancuernas frente a los muslos.",
+          "pose": {
+            "raiz": { "pos": [0, 0.898, 0], "pitch": 0 },
+            "art": {
+              "columna": [0], "cuello": [0], "hombroI": [0, 0], "hombroD": [0, 0],
+              "caderaI": [4, 0], "caderaD": [4, 0], "rodillaI": [8], "rodillaD": [8], "tobilloI": [4], "tobilloD": [4]
+            }
+          }
+        },
+        {
+          "nombre": "Descenso",
+          "descripcion": "Cadera hacia atrás y torso inclinado, espalda neutra y mancuernas pegadas a las piernas.",
+          "pose": {
+            "raiz": { "pos": [0, 0.887, -0.1], "pitch": 0 },
+            "art": {
+              "columna": [35], "cuello": [-10], "hombroI": [35, 0], "hombroD": [35, 0],
+              "caderaI": [14, 0], "caderaD": [14, 0], "rodillaI": [14], "rodillaD": [14], "tobilloI": [0], "tobilloD": [0]
+            }
+          }
+        },
+        {
+          "nombre": "Final",
+          "descripcion": "Estiramiento en los isquiotibiales: baja hasta donde mantengas la espalda neutra y vuelve empujando con los talones.",
+          "pose": {
+            "raiz": { "pos": [0, 0.859, -0.21], "pitch": 0 },
+            "art": {
+              "columna": [80], "cuello": [-30], "hombroI": [80, 0], "hombroD": [80, 0],
+              "caderaI": [25, 0], "caderaD": [25, 0], "rodillaI": [20], "rodillaD": [20], "tobilloI": [-5], "tobilloD": [-5]
+            }
+          }
+        }
+      ],
+      "pendienteValidacion": [
+        "Series, repeticiones y descanso son valores sugeridos.",
+        "Las fuentes no coinciden en el papel del aductor mayor (secundario según una, estabilizador según otra).",
+        "La profundidad depende de la flexibilidad de cada persona; el modelo muestra una profundidad media, no un objetivo."
+      ]
+    }
+  ]
+}

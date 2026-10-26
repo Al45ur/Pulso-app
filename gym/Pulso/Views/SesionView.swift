@@ -117,10 +117,9 @@ struct SesionView: View {
                 Text("\(reps) repeticiones").font(.headline)
             }
             Button(action: registrar) {
-                Text("Registrar serie").font(.headline).frame(maxWidth: .infinity)
+                Text("Registrar serie")
             }
-            .buttonStyle(.borderedProminent)
-            .controlSize(.large)
+            .buttonStyle(BotonPrimario())
             if let mensajeError {
                 Text(mensajeError).font(.footnote).foregroundStyle(.red)
             }

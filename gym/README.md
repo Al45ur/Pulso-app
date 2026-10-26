@@ -1,6 +1,7 @@
 # Pulso — app de gym para iPhone
 
-App nativa (SwiftUI + SwiftData + App Intents, iOS 17 o superior) basada en un reel de tríceps de @modopro_app.
+App nativa (SwiftUI + SwiftData + SceneKit + App Intents, iOS 17 o superior). Empezó con la rutina de tríceps de un reel
+y ahora incluye un catálogo de ejercicios con modelo humano 3D articulado.
 
 ## Abrirla en Xcode (en un Mac)
 
@@ -11,22 +12,58 @@ xcodegen            # genera Pulso.xcodeproj desde project.yml
 open Pulso.xcodeproj
 ```
 
-En Xcode: elige el target **Pulso** → *Signing & Capabilities* → selecciona tu *Team*, y ejecuta en tu iPhone o simulador.
-Para correr las pruebas: `Cmd+U`.
+En Xcode: target **Pulso** → *Signing & Capabilities* → elige tu *Team* y ejecuta. Pruebas: `Cmd+U`.
 
-## Qué incluye
+## Pestañas y pantallas
 
-- **Rutina de tríceps** con 4 ejercicios (pasos y errores comunes contrastados con fuentes públicas).
-- **Entrenamiento en curso**: registra peso y repeticiones por serie, con temporizador de descanso.
-- **Historial** de entrenamientos con volumen total.
-- **Siri / Atajos**:
-  - «Inicia Tríceps en Pulso»
-  - «Registra una serie en Pulso» (Siri pregunta las repeticiones y los kilos)
-  - «Siguiente ejercicio en Pulso»
-  - «Termina el entrenamiento en Pulso»
+| Pestaña | Contenido |
+|---|---|
+| **Ejercicios** | 1 Catálogo (búsqueda y filtros) → 2 Ficha → 3 Animación 3D · 4 Anatomía 3D · 5 Técnica · 6 Mapa de músculos · 7 Guía paso a paso · 8 Resumen |
+| **Rutinas** | «Tríceps» (la del reel) y «Mi rutina» (los ejercicios que añades desde el resumen) |
+| **Historial** | Entrenamientos terminados con su volumen |
 
-## Notas
+El ejercicio elegido se mantiene entre pantallas (se navega por identificador de ficha).
 
-- Series, repeticiones y descansos son valores **sugeridos**; el reel no los indica.
-- Las frases de Siri están en español: el idioma del iPhone y de Siri debe ser español.
-- No se incluyen imágenes del reel (son de otro autor).
+## Dónde está cada cosa
+
+- `Pulso/Resources/ejercicios.json`: **única fuente** de cada ejercicio: músculos principales y secundarios, pasos, errores,
+  seguridad, series/repeticiones/descanso sugeridos, accesorios (banco, barra, cable), cámara y las poses de cada fase.
+  Cada ficha lleva `pendienteValidacion` con lo que aún no está confirmado; la app lo muestra.
+- `Pulso/Scene3D/Maniqui.swift`: esqueleto articulado (cada articulación es un nodo que se gira) y un volumen por músculo.
+- `Pulso/Scene3D/EscenaEntrenamiento.swift`: luces, cámara y accesorios que siguen a las manos.
+- `Pulso/Models/Pose.swift`: poses, interpolación y la línea de tiempo (cada fase pasa a la siguiente y la última vuelve a la primera).
+- `Pulso/Views/Ejercicios/`: las ocho pantallas.
+
+La animación y el resaltado muscular salen de la **misma ficha**; no son dos elementos independientes.
+El resaltado marca los músculos asociados al ejercicio; **no mide activación real**.
+
+## Cómo añadir un ejercicio
+
+1. Añade una ficha en `ejercicios.json` (copia una existente). Los músculos deben ser ids de `Musculo`.
+2. Define 2 o más fases con sus poses. Ángulos en grados: `[flexión, abducción]`; `raiz.pos` = posición de la pelvis.
+3. Comprueba las poses sin Xcode: `python3 gym/tools/verificar_poses.py /ruta/salida` (requiere Pillow).
+   Dibuja cada fase de perfil y de frente e informa si los pies tocan el suelo.
+4. La app valida el JSON al cargar (`CatalogoEjercicios.validar`) y muestra el error en pantalla si algo no cuadra.
+
+`tools/verificar_poses.py` y `Maniqui.swift` usan las mismas medidas y la misma cinemática. La prueba
+`testLaCinematicaDeSceneKitCoincideConElVerificador` falla si dejan de coincidir.
+
+## Siri / Atajos
+
+- «Inicia Tríceps en Pulso» · «Inicia Mi rutina en Pulso»
+- «Registra una serie en Pulso» (pregunta repeticiones y kilos)
+- «Siguiente ejercicio en Pulso» · «Termina el entrenamiento en Pulso»
+
+Las frases están en español: el iPhone y Siri deben estar en español.
+
+## Pendiente (para completar la visión del diseño)
+
+1. **Modelo humano realista.** El maniquí es procedural (cápsulas y esferas). Para «anatomía realista» hace falta un
+   personaje 3D con esqueleto (USDZ) y malla muscular separada, con licencia comercial. Cuando exista, se sustituye
+   `Maniqui` por una clase con los mismos métodos (`aplicar(_:)`, `resaltar(...)`, `manoI`, `manoD`).
+2. **Más ejercicios.** Solo hay 5 (4 de tríceps, 1 de piernas). Los filtros muestran solo categorías con ejercicios.
+3. **Validación de contenido** por un entrenador: ver `pendienteValidacion` de cada ficha.
+4. **Pestañas Inicio y Perfil** del diseño de referencia: no se crearon porque no tienen función todavía.
+5. **SceneKit** está marcado como obsoleto desde iOS 26 (sigue funcionando). Si se migra a RealityKit, solo cambian
+   `Scene3D/` y `VistaEscena`.
+6. No se incluyen imágenes del reel ni del diseño de referencia (son de terceros).

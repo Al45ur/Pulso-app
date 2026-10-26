@@ -8,9 +8,11 @@ enum EntrenamientoError: Error, Equatable, CustomLocalizedStringResourceConverti
     case ultimoEjercicio
     case primerEjercicio
     case rutinaNoEncontrada
+    case rutinaVacia
 
     var localizedStringResource: LocalizedStringResource {
         switch self {
+        case .rutinaVacia: return "Esa rutina no tiene ejercicios. Añade alguno desde la pestaña Ejercicios."
         case .sinSesionActiva: return "No hay un entrenamiento en curso. Inicia una rutina primero."
         case .sinEjercicio: return "La rutina no tiene un ejercicio actual."
         case .valorInvalido: return "Las repeticiones deben estar entre 1 y 100, y el peso entre 0 y 500 kilos."

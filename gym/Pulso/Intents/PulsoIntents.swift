@@ -17,6 +17,7 @@ struct IniciarRutinaIntent: AppIntent {
         guard let encontrada = try contexto.fetch(descriptor).first else {
             throw EntrenamientoError.rutinaNoEncontrada
         }
+        guard !encontrada.plan.isEmpty else { throw EntrenamientoError.rutinaVacia }
         let sesion = EntrenamientoService.iniciar(encontrada, en: contexto)
         let primero = sesion.ejercicioActual?.nombre ?? "tu primer ejercicio"
         let mensaje = "Rutina \(encontrada.nombre) iniciada. Empieza con \(primero)."

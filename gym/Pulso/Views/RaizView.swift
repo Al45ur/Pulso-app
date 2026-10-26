@@ -7,7 +7,9 @@ struct RaizView: View {
 
     var body: some View {
         TabView {
-            NavigationStack { RutinasView() }
+            EjerciciosRaiz()
+                .tabItem { Label("Ejercicios", systemImage: "figure.strengthtraining.traditional") }
+            NavigationStack { RutinasView().conDestinosEjercicio() }
                 .tabItem { Label("Rutinas", systemImage: "dumbbell.fill") }
             NavigationStack { HistorialView() }
                 .tabItem { Label("Historial", systemImage: "clock.arrow.circlepath") }

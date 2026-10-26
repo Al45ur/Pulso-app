@@ -4,14 +4,17 @@ import SwiftData
 @Model
 final class Ejercicio {
     @Attribute(.unique) var id: UUID
+    /// Identificador de la ficha en ejercicios.json; vacío si el ejercicio no viene del catálogo.
+    var fichaID: String = ""
     var nombre: String
     var equipo: String
     var enfasis: String
     var pasos: [String]
     var errores: [String]
 
-    init(nombre: String, equipo: String, enfasis: String, pasos: [String], errores: [String]) {
+    init(fichaID: String = "", nombre: String, equipo: String, enfasis: String, pasos: [String], errores: [String]) {
         self.id = UUID()
+        self.fichaID = fichaID
         self.nombre = nombre
         self.equipo = equipo
         self.enfasis = enfasis
