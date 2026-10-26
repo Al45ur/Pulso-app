@@ -359,6 +359,78 @@
         "Las fuentes no coinciden en el papel del aductor mayor (secundario según una, estabilizador según otra).",
         "La profundidad depende de la flexibilidad de cada persona; el modelo muestra una profundidad media, no un objetivo."
       ]
+    },
+    {
+      "id": "elevacion-lateral-polea-una-mano",
+      "nombre": "Elevación lateral en polea a una mano",
+      "categoria": "Hombros",
+      "equipo": "Polea baja, agarre individual",
+      "musculosPrincipales": ["deltoides"],
+      "musculosSecundarios": ["trapecio"],
+      "descripcion": "Elevación del brazo hacia el lado con la polea baja. Trabaja sobre todo la parte lateral (media) del deltoides, la que da anchura al hombro. La polea ofrece resistencia desde el inicio del recorrido.",
+      "pasos": [
+        "Coloca la polea en su posición más baja y engancha un agarre individual.",
+        "Ponte de lado a la máquina y toma el agarre con la mano contraria, cruzando el brazo por delante del cuerpo.",
+        "Con el codo ligeramente flexionado, sube el brazo hacia el lado hasta que quede aproximadamente a la altura del hombro.",
+        "Baja de forma controlada hasta volver a cruzar el cuerpo. Puedes apoyar la otra mano en la columna o en la cadera para estabilizarte."
+      ],
+      "errores": [
+        "Usar demasiado peso: se pierde el control del ritmo y la técnica.",
+        "Balancear el cuerpo para subir el brazo.",
+        "Subir el brazo por encima de la altura del hombro (las guías indican detenerse ahí).",
+        "Encoger los hombros hacia las orejas."
+      ],
+      "seguridad": [
+        "Mantén los hombros abajo y atrás durante todo el movimiento.",
+        "Elige un peso con el que controles también la bajada.",
+        "Haz las mismas series con ambos brazos."
+      ],
+      "series": 3, "repsMin": 12, "repsMax": 15, "descansoSeg": 60,
+      "props": [
+        { "tipo": "cable", "ancla": [0.55, 0.25, 0], "hacia": "manoD" },
+        { "tipo": "manija", "mano": "D" }
+      ],
+      "camara": { "azimut": 15, "altura": 1.1, "distancia": 3.3, "objetivoY": 0.95, "semiancho": 1.0 },
+      "faseMiniatura": 2,
+      "fases": [
+        {
+          "nombre": "Inicio",
+          "descripcion": "El agarre cruza por delante del cuerpo hacia la cadera contraria, con el codo ligeramente flexionado.",
+          "pose": {
+            "raiz": { "pos": [0, 0.897, 0], "pitch": 0 },
+            "art": {
+              "columna": [0], "hombroI": [0, 8], "hombroD": [22, -26], "codoI": [10], "codoD": [15], "caderaI": [3, 4], "caderaD": [3, 4], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        },
+        {
+          "nombre": "Ejecución",
+          "descripcion": "Sube el brazo hacia el lado sin balancear el cuerpo.",
+          "pose": {
+            "raiz": { "pos": [0, 0.897, 0], "pitch": 0 },
+            "art": {
+              "columna": [0], "hombroI": [0, 8], "hombroD": [22, 45], "codoI": [10], "codoD": [15], "caderaI": [3, 4], "caderaD": [3, 4], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        },
+        {
+          "nombre": "Final",
+          "descripcion": "El brazo queda aproximadamente a la altura del hombro, con el codo ligeramente flexionado. Baja controlando.",
+          "pose": {
+            "raiz": { "pos": [0, 0.897, 0], "pitch": 0 },
+            "art": {
+              "columna": [0], "hombroI": [0, 8], "hombroD": [25, 85], "codoI": [10], "codoD": [15], "caderaI": [3, 4], "caderaD": [3, 4], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        }
+      ],
+      "pendienteValidacion": [
+        "Series y repeticiones sugeridas: el único estudio encontrado para este ejercicio usó 12–16 repeticiones a fallo (5 series por sesión); el resto de cifras son orientativas.",
+        "Los subtítulos de los reels están incompletos («…alejar el peso…», «rodillas»): la altura exacta de la polea (una fuente indica un poco por debajo de la cadera) debe validarse.",
+        "Los músculos secundarios (trapecio, deltoides anterior, supraespinoso) vienen de blogs de entrenamiento, no de estudios. El modelo resalta todo el deltoides y no representa el supraespinoso.",
+        "Un estudio de 2025 (24 personas) no encontró diferencias de crecimiento entre polea y mancuernas: la polea es una opción, no una mejora demostrada.",
+        "Mezcla las técnicas de dos reels (@ricardoelias_aest y @juniorworkout_); si difieren, validar con un entrenador."
+      ]
     }
   ]
 }

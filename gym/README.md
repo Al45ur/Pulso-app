@@ -72,7 +72,7 @@ Las frases están en español: el iPhone y Siri deben estar en español.
    articulaciones redondeadas, sin cara, manos con dedos ni deformación de la piel al doblar. Para un nivel de estudio
    hace falta un personaje con esqueleto (USDZ) y malla muscular separada, con licencia comercial. `Maniqui` está aislado:
    basta con otra clase con los mismos métodos (`aplicar(_:)`, `resaltar(...)`, `manoI`, `manoD`).
-2. **Más ejercicios.** Solo hay 5 (4 de tríceps, 1 de piernas). Los filtros muestran solo categorías con ejercicios.
+2. **Más ejercicios.** Hay 6 (4 de tríceps, 1 de piernas, 1 de hombros). Los filtros muestran solo categorías con ejercicios.
 3. **Validación de contenido** por un entrenador: ver `pendienteValidacion` de cada ficha.
 4. **Pestañas Inicio y Perfil** del diseño de referencia: no se crearon porque no tienen función todavía.
 5. **SceneKit** está marcado como obsoleto desde iOS 26 (sigue funcionando). Si se migra a RealityKit, solo cambian

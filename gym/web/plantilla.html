@@ -427,7 +427,7 @@
 
     function distanciaAjustada(dist, azimut, aspect) {
       const lateral = Math.abs(Math.sin(rad(azimut))) > 0.5, f = E.ficha;
-      const semi = f && E.modo === "ejercicio" && esAcostado(f) ? (lateral ? 1.05 : 0.45) : 0.62;
+      const semi = f && E.modo === "ejercicio" && f.camara.semiancho ? f.camara.semiancho : f && E.modo === "ejercicio" && esAcostado(f) ? (lateral ? 1.05 : 0.45) : 0.62;
       return Math.max(dist, semi / (Math.tan(rad(camera.fov / 2)) * aspect));
     }
     function colocarCamara(azimut, altura, dist, objetivoY, aspect) {

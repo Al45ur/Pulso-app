@@ -33,9 +33,9 @@ final class CatalogoPoseTests: XCTestCase {
     func testElCatalogoCargaYEsValido() {
         let catalogo = CatalogoEjercicios.compartido
         XCTAssertNil(catalogo.error)
-        XCTAssertEqual(catalogo.fichas.count, 5)
+        XCTAssertEqual(catalogo.fichas.count, 6)
         XCTAssertEqual(Set(catalogo.fichas.map(\.id)).count, catalogo.fichas.count)
-        XCTAssertEqual(catalogo.categorias, ["Tríceps", "Piernas"])
+        XCTAssertEqual(catalogo.categorias, ["Tríceps", "Piernas", "Hombros"])
     }
 
     func testElPesoMuertoRumanoNoEsDeTriceps() throws {
@@ -45,6 +45,18 @@ final class CatalogoPoseTests: XCTestCase {
         XCTAssertFalse(rdl.principales.contains(.triceps) || rdl.secundarios.contains(.triceps))
         XCTAssertEqual(rdl.rol(de: .lumbar), .secundario)
         XCTAssertEqual(rdl.rol(de: .biceps), .ninguno)
+    }
+
+    func testLaElevacionLateralTrabajaElDeltoidesYNoElTriceps() throws {
+        let ficha = try ficha("elevacion-lateral-polea-una-mano")
+        XCTAssertEqual(ficha.categoria, "Hombros")
+        XCTAssertEqual(ficha.principales, [.deltoides])
+        XCTAssertEqual(ficha.secundarios, [.trapecio])
+        XCTAssertEqual(ficha.fases.count, 3)
+        // El brazo derecho sube: abducción creciente de la primera a la última fase.
+        let abducciones = ficha.fases.map { $0.pose.angulos(.hombroD).abduccion }
+        XCTAssertEqual(abducciones, abducciones.sorted())
+        XCTAssertGreaterThan(abducciones.last ?? 0, 80)
     }
 
     func testTodosLosEjerciciosDeTricepsTrabajanElTriceps() {
@@ -141,7 +153,8 @@ final class CatalogoPoseTests: XCTestCase {
             ("extension-triceps-sobre-cabeza-cuerda", 0, 0.179, 1.616, -0.043),
             ("extension-triceps-sobre-cabeza-cuerda", 2, 0.137, 1.933, 0.371),
             ("peso-muerto-rumano-mancuernas", 1, 0.190, 0.696, 0.158),
-            ("peso-muerto-rumano-mancuernas", 2, 0.190, 0.377, 0.233)
+            ("peso-muerto-rumano-mancuernas", 2, 0.190, 0.377, 0.233),
+            ("elevacion-lateral-polea-una-mano", 2, 0.274, 0.798, 0.054)
         ]
         let maniqui = Maniqui()
         for caso in esperado {
