@@ -314,6 +314,8 @@
   const RUTINAS = {
     triceps: () => ({ id: "triceps", nombre: "Tríceps", detalle: "La rutina del reel: jalón, extensión acostado, extensión sobre la cabeza y jalón a una mano.", fija: true,
       items: CATALOGO.filter((f) => f.categoria === "Tríceps").map((f) => ({ f: f.id, ...sugerida(f) })) }),
+    hombros: () => ({ id: "hombros", nombre: "Hombros", detalle: "Press inclinado, elevación lateral y pájaro en polea: las tres partes del deltoides.", fija: true,
+      items: ["press-hombros-mancuernas-banco-inclinado", "elevacion-lateral-polea-una-mano", "pajaro-polea-alta-cruzada"].map(porId).filter(Boolean).map((f) => ({ f: f.id, ...sugerida(f) })) }),
     mia: () => ({ id: "mia", nombre: "Mi rutina", detalle: "Los ejercicios que añades desde el catálogo.", fija: false, items: S.estado.miRutina.filter((i) => porId(i.f)) })
   };
 
@@ -681,7 +683,7 @@
   }
 
   function vRutinas() {
-    const ids = ["triceps", "mia"];
+    const ids = ["triceps", "hombros", "mia"];
     return '<div class="top"><h2>Rutinas</h2></div>' +
       ids.map((id) => { const r = rutinaPorId(id); return '<button class="card link" data-rutina="' + id + '" style="display:block"><h3>' + esc(r.nombre) + '</h3><div class="small muted">' + esc(r.detalle) + '</div><div class="small neon" style="margin-top:6px">' + r.items.length + " ejercicios</div></button>"; }).join("") +
       (S.estado.activa ? '<p class="muted small">Tienes un entrenamiento en curso: ' + esc(S.estado.activa.nombre) + ".</p>" : "") + estadoAlmacen();

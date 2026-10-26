@@ -27,7 +27,7 @@ guarda los datos en la cuenta de quien la usa (`db`, subárbol privado) o, sin s
 |---|---|
 | **Ejercicios** | 1 Catálogo (búsqueda y filtros) → 2 Ficha → 3 Animación 3D · 4 Anatomía 3D · 5 Técnica · 6 Mapa de músculos · 7 Guía paso a paso · 8 Resumen |
 | **Mapa** *(solo web)* | Muñeco 3D (frente/perfil/espalda): al tocar un músculo se listan los ejercicios donde es principal o secundario; marca los músculos sin ejercicio en el catálogo |
-| **Rutinas** | «Tríceps» (la del reel) y «Mi rutina» (los ejercicios que añades desde el resumen) |
+| **Rutinas** | «Tríceps» (la del reel), «Hombros» (press inclinado, elevación lateral y pájaro) y «Mi rutina» (los ejercicios que añades desde el resumen) |
 | **Historial** | Entrenamientos terminados con su volumen |
 | **Progreso** *(solo web)* | Fotos de frente, perfil y espalda por fecha, comparación de dos fechas, guía para repetir la pose, borrado y exportación. Privadas; sin reconocimiento corporal por IA |
 
