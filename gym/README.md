@@ -29,7 +29,11 @@ El ejercicio elegido se mantiene entre pantallas (se navega por identificador de
 - `Pulso/Resources/ejercicios.json`: **única fuente** de cada ejercicio: músculos principales y secundarios, pasos, errores,
   seguridad, series/repeticiones/descanso sugeridos, accesorios (banco, barra, cable), cámara y las poses de cada fase.
   Cada ficha lleva `pendienteValidacion` con lo que aún no está confirmado; la app lo muestra.
-- `Pulso/Scene3D/Maniqui.swift`: esqueleto articulado (cada articulación es un nodo que se gira) y un volumen por músculo.
+- `Pulso/Scene3D/Maniqui.swift`: esqueleto articulado (cada articulación es un nodo que se gira). Cuelga de él el
+  personaje cargado de `Resources/maniqui.json` + `maniqui.bin` (piel de cada segmento y una capa por músculo).
+  Si esos archivos faltan, usa un maniquí procedural de respaldo.
+- `tools/generar_maniqui.py`: genera el personaje (secciones elípticas con splines para la piel; cada músculo se recorta
+  de la piel y se eleva con un perfil suave). `tools/vista_previa_maniqui.py` lo dibuja en cada pose sin Xcode.
 - `Pulso/Scene3D/EscenaEntrenamiento.swift`: luces, cámara y accesorios que siguen a las manos.
 - `Pulso/Models/Pose.swift`: poses, interpolación y la línea de tiempo (cada fase pasa a la siguiente y la última vuelve a la primera).
 - `Pulso/Views/Ejercicios/`: las ocho pantallas.
@@ -58,9 +62,10 @@ Las frases están en español: el iPhone y Siri deben estar en español.
 
 ## Pendiente (para completar la visión del diseño)
 
-1. **Modelo humano realista.** El maniquí es procedural (cápsulas y esferas). Para «anatomía realista» hace falta un
-   personaje 3D con esqueleto (USDZ) y malla muscular separada, con licencia comercial. Cuando exista, se sustituye
-   `Maniqui` por una clase con los mismos métodos (`aplicar(_:)`, `resaltar(...)`, `manoI`, `manoD`).
+1. **Modelo humano de estudio.** El personaje es un maniquí atlético generado por código: segmentos rígidos con
+   articulaciones redondeadas, sin cara, manos con dedos ni deformación de la piel al doblar. Para un nivel de estudio
+   hace falta un personaje con esqueleto (USDZ) y malla muscular separada, con licencia comercial. `Maniqui` está aislado:
+   basta con otra clase con los mismos métodos (`aplicar(_:)`, `resaltar(...)`, `manoI`, `manoD`).
 2. **Más ejercicios.** Solo hay 5 (4 de tríceps, 1 de piernas). Los filtros muestran solo categorías con ejercicios.
 3. **Validación de contenido** por un entrenador: ver `pendienteValidacion` de cada ficha.
 4. **Pestañas Inicio y Perfil** del diseño de referencia: no se crearon porque no tienen función todavía.

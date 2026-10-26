@@ -153,6 +153,22 @@ final class CatalogoPoseTests: XCTestCase {
         }
     }
 
+    func testElManiquiUsaElPersonajeDeMallasYApoyaEnElSuelo() throws {
+        XCTAssertTrue(MallasManiqui.disponible, "Faltan maniqui.json/maniqui.bin: ejecuta tools/generar_maniqui.py")
+        let maniqui = Maniqui()
+        XCTAssertTrue(maniqui.usaMalla)
+
+        maniqui.aplicar(.neutra)
+        for nombre in ["pie_I", "pie_D"] {
+            let pie = try XCTUnwrap(maniqui.raiz.childNode(withName: nombre, recursively: true))
+            let (minimo, _) = pie.boundingBox
+            let suelo = pie.simdConvertPosition(SIMD3<Float>(minimo.x, minimo.y, minimo.z), to: nil)
+            XCTAssertEqual(suelo.y, 0, accuracy: 0.01, "\(nombre) debe apoyar en el suelo")
+        }
+        // Cada músculo del lado izquierdo y del derecho debe poder resaltarse.
+        XCTAssertEqual(maniqui.musculosDisponibles, Set(Musculo.allCases))
+    }
+
     func testLaEscenaSeConfiguraParaCadaEjercicio() {
         let escena = EscenaEntrenamiento()
         for ficha in CatalogoEjercicios.compartido.fichas {

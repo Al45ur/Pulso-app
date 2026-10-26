@@ -62,40 +62,43 @@ def esqueleto(pose):
     raiz = pose["raiz"]
     R0 = rx(raiz.get("pitch", 0.0))
     p0 = list(raiz["pos"])
-    J = {"pelvis": p0}
+    J = {"pelvis": p0, "T:raiz": (p0, R0)}
 
-    def nodo(padre_pos, padre_rot, local_pos, local_rot):
-        return add(padre_pos, app(padre_rot, local_pos)), mul(padre_rot, local_rot)
+    def nodo(padre_pos, padre_rot, local_pos, local_rot, nombre=None):
+        pos, rot = add(padre_pos, app(padre_rot, local_pos)), mul(padre_rot, local_rot)
+        if nombre:
+            J["T:" + nombre] = (pos, rot)
+        return pos, rot
 
     # Columna / cuello / cabeza
     flex, = art(pose, "columna", 1)
-    pc, Rc = nodo(p0, R0, COLUMNA, rx(flex))
+    pc, Rc = nodo(p0, R0, COLUMNA, rx(flex), "columna")
     J["columna"] = pc
     for lado, s in (("I", 1), ("D", -1)):
         # Hombro: Rx(-flex) * Rz(s*abd)
         f, a = art(pose, "hombro" + lado)
-        ph, Rh = nodo(pc, Rc, (s * HOMBRO[0], HOMBRO[1], HOMBRO[2]), mul(rx(-f), rz(s * a)))
+        ph, Rh = nodo(pc, Rc, (s * HOMBRO[0], HOMBRO[1], HOMBRO[2]), mul(rx(-f), rz(s * a)), "hombro" + lado)
         J["hombro" + lado] = ph
         f, = art(pose, "codo" + lado, 1)
-        pe, Re = nodo(ph, Rh, (0, -BRAZO, 0), rx(-f))
+        pe, Re = nodo(ph, Rh, (0, -BRAZO, 0), rx(-f), "codo" + lado)
         J["codo" + lado] = pe
         J["mano" + lado] = add(pe, app(Re, (0, -(ANTEBRAZO + MANO), 0)))
         # Pierna
         f, a = art(pose, "cadera" + lado)
-        pcad, Rcad = nodo(p0, R0, (s * CADERA[0], CADERA[1], CADERA[2]), mul(rx(-f), rz(s * a)))
+        pcad, Rcad = nodo(p0, R0, (s * CADERA[0], CADERA[1], CADERA[2]), mul(rx(-f), rz(s * a)), "cadera" + lado)
         J["cadera" + lado] = pcad
         f, = art(pose, "rodilla" + lado, 1)
-        pr, Rr = nodo(pcad, Rcad, (0, -MUSLO, 0), rx(f))
+        pr, Rr = nodo(pcad, Rcad, (0, -MUSLO, 0), rx(f), "rodilla" + lado)
         J["rodilla" + lado] = pr
         f, = art(pose, "tobillo" + lado, 1)
-        pt, Rt = nodo(pr, Rr, (0, -PANTORRILLA, 0), rx(-f))
+        pt, Rt = nodo(pr, Rr, (0, -PANTORRILLA, 0), rx(-f), "tobillo" + lado)
         J["tobillo" + lado] = pt
         J["suela" + lado] = add(pt, app(Rt, (0, -TOBILLO_SUELO, 0)))
         J["punta" + lado] = add(pt, app(Rt, (0, -TOBILLO_SUELO, PIE_FRENTE)))
         J["talon" + lado] = add(pt, app(Rt, (0, -TOBILLO_SUELO, -PIE_ATRAS)))
         J["_Rt" + lado] = Rt
     fc, = art(pose, "cuello", 1)
-    pn, Rn = nodo(pc, Rc, CUELLO, rx(fc))
+    pn, Rn = nodo(pc, Rc, CUELLO, rx(fc), "cuello")
     J["cuello"] = pn
     J["cabeza"] = add(pn, app(Rn, CABEZA))
     return J

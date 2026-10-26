@@ -1,0 +1,347 @@
+{
+ "version": 1,
+ "partes": [
+  {
+   "nombre": "pelvis",
+   "junta": "raiz",
+   "rol": "cuerpo",
+   "musculo": null,
+   "v": 1682,
+   "i": 10080,
+   "o": 0
+  },
+  {
+   "nombre": "torso",
+   "junta": "columna",
+   "rol": "cuerpo",
+   "musculo": null,
+   "v": 3250,
+   "i": 19488,
+   "o": 80688
+  },
+  {
+   "nombre": "cabeza",
+   "junta": "cuello",
+   "rol": "cuerpo",
+   "musculo": null,
+   "v": 1908,
+   "i": 11424,
+   "o": 236640
+  },
+  {
+   "nombre": "brazo_I",
+   "junta": "hombroI",
+   "rol": "cuerpo",
+   "musculo": null,
+   "v": 2298,
+   "i": 13776,
+   "o": 328128
+  },
+  {
+   "nombre": "brazo_D",
+   "junta": "hombroD",
+   "rol": "cuerpo",
+   "musculo": null,
+   "v": 2298,
+   "i": 13776,
+   "o": 438384
+  },
+  {
+   "nombre": "antebrazo_I",
+   "junta": "codoI",
+   "rol": "cuerpo",
+   "musculo": null,
+   "v": 2748,
+   "i": 16464,
+   "o": 548640
+  },
+  {
+   "nombre": "antebrazo_D",
+   "junta": "codoD",
+   "rol": "cuerpo",
+   "musculo": null,
+   "v": 2748,
+   "i": 16464,
+   "o": 680448
+  },
+  {
+   "nombre": "muslo_I",
+   "junta": "caderaI",
+   "rol": "cuerpo",
+   "musculo": null,
+   "v": 3194,
+   "i": 19152,
+   "o": 812256
+  },
+  {
+   "nombre": "muslo_D",
+   "junta": "caderaD",
+   "rol": "cuerpo",
+   "musculo": null,
+   "v": 3194,
+   "i": 19152,
+   "o": 965520
+  },
+  {
+   "nombre": "pantorrilla_I",
+   "junta": "rodillaI",
+   "rol": "cuerpo",
+   "musculo": null,
+   "v": 2858,
+   "i": 17136,
+   "o": 1118784
+  },
+  {
+   "nombre": "pantorrilla_D",
+   "junta": "rodillaD",
+   "rol": "cuerpo",
+   "musculo": null,
+   "v": 2858,
+   "i": 17136,
+   "o": 1255920
+  },
+  {
+   "nombre": "pie_I",
+   "junta": "tobilloI",
+   "rol": "cuerpo",
+   "musculo": null,
+   "v": 1514,
+   "i": 9072,
+   "o": 1393056
+  },
+  {
+   "nombre": "pie_D",
+   "junta": "tobilloD",
+   "rol": "cuerpo",
+   "musculo": null,
+   "v": 1514,
+   "i": 9072,
+   "o": 1465680
+  },
+  {
+   "nombre": "triceps_I",
+   "junta": "hombroI",
+   "rol": "musculo",
+   "musculo": "triceps",
+   "v": 426,
+   "i": 2154,
+   "o": 1538304
+  },
+  {
+   "nombre": "triceps_D",
+   "junta": "hombroD",
+   "rol": "musculo",
+   "musculo": "triceps",
+   "v": 426,
+   "i": 2154,
+   "o": 1557144
+  },
+  {
+   "nombre": "biceps_I",
+   "junta": "hombroI",
+   "rol": "musculo",
+   "musculo": "biceps",
+   "v": 340,
+   "i": 1692,
+   "o": 1575984
+  },
+  {
+   "nombre": "biceps_D",
+   "junta": "hombroD",
+   "rol": "musculo",
+   "musculo": "biceps",
+   "v": 340,
+   "i": 1692,
+   "o": 1590912
+  },
+  {
+   "nombre": "deltoides_I",
+   "junta": "hombroI",
+   "rol": "musculo",
+   "musculo": "deltoides",
+   "v": 1200,
+   "i": 6852,
+   "o": 1605840
+  },
+  {
+   "nombre": "deltoides_D",
+   "junta": "hombroD",
+   "rol": "musculo",
+   "musculo": "deltoides",
+   "v": 1200,
+   "i": 6852,
+   "o": 1662048
+  },
+  {
+   "nombre": "antebrazos_I",
+   "junta": "codoI",
+   "rol": "musculo",
+   "musculo": "antebrazos",
+   "v": 1652,
+   "i": 9564,
+   "o": 1718256
+  },
+  {
+   "nombre": "antebrazos_D",
+   "junta": "codoD",
+   "rol": "musculo",
+   "musculo": "antebrazos",
+   "v": 1652,
+   "i": 9564,
+   "o": 1796160
+  },
+  {
+   "nombre": "pectorales_I",
+   "junta": "columna",
+   "rol": "musculo",
+   "musculo": "pectorales",
+   "v": 196,
+   "i": 924,
+   "o": 1874064
+  },
+  {
+   "nombre": "pectorales_D",
+   "junta": "columna",
+   "rol": "musculo",
+   "musculo": "pectorales",
+   "v": 196,
+   "i": 924,
+   "o": 1882464
+  },
+  {
+   "nombre": "abdomen",
+   "junta": "columna",
+   "rol": "musculo",
+   "musculo": "abdomen",
+   "v": 294,
+   "i": 1374,
+   "o": 1890864
+  },
+  {
+   "nombre": "dorsales",
+   "junta": "columna",
+   "rol": "musculo",
+   "musculo": "dorsales",
+   "v": 603,
+   "i": 3060,
+   "o": 1903416
+  },
+  {
+   "nombre": "trapecio",
+   "junta": "columna",
+   "rol": "musculo",
+   "musculo": "trapecio",
+   "v": 426,
+   "i": 2040,
+   "o": 1930128
+  },
+  {
+   "nombre": "lumbar_I",
+   "junta": "columna",
+   "rol": "musculo",
+   "musculo": "lumbar",
+   "v": 177,
+   "i": 768,
+   "o": 1948512
+  },
+  {
+   "nombre": "lumbar_D",
+   "junta": "columna",
+   "rol": "musculo",
+   "musculo": "lumbar",
+   "v": 177,
+   "i": 768,
+   "o": 1955832
+  },
+  {
+   "nombre": "gluteos_I",
+   "junta": "raiz",
+   "rol": "musculo",
+   "musculo": "gluteos",
+   "v": 259,
+   "i": 1254,
+   "o": 1963152
+  },
+  {
+   "nombre": "gluteos_D",
+   "junta": "raiz",
+   "rol": "musculo",
+   "musculo": "gluteos",
+   "v": 259,
+   "i": 1254,
+   "o": 1974384
+  },
+  {
+   "nombre": "cuadriceps_I",
+   "junta": "caderaI",
+   "rol": "musculo",
+   "musculo": "cuadriceps",
+   "v": 592,
+   "i": 3054,
+   "o": 1985616
+  },
+  {
+   "nombre": "cuadriceps_D",
+   "junta": "caderaD",
+   "rol": "musculo",
+   "musculo": "cuadriceps",
+   "v": 592,
+   "i": 3054,
+   "o": 2012040
+  },
+  {
+   "nombre": "isquiotibiales_I",
+   "junta": "caderaI",
+   "rol": "musculo",
+   "musculo": "isquiotibiales",
+   "v": 531,
+   "i": 2718,
+   "o": 2038464
+  },
+  {
+   "nombre": "isquiotibiales_D",
+   "junta": "caderaD",
+   "rol": "musculo",
+   "musculo": "isquiotibiales",
+   "v": 531,
+   "i": 2718,
+   "o": 2062080
+  },
+  {
+   "nombre": "aductores_I",
+   "junta": "caderaI",
+   "rol": "musculo",
+   "musculo": "aductores",
+   "v": 388,
+   "i": 1944,
+   "o": 2085696
+  },
+  {
+   "nombre": "aductores_D",
+   "junta": "caderaD",
+   "rol": "musculo",
+   "musculo": "aductores",
+   "v": 388,
+   "i": 1944,
+   "o": 2102784
+  },
+  {
+   "nombre": "gemelos_I",
+   "junta": "rodillaI",
+   "rol": "musculo",
+   "musculo": "gemelos",
+   "v": 457,
+   "i": 2322,
+   "o": 2119872
+  },
+  {
+   "nombre": "gemelos_D",
+   "junta": "rodillaD",
+   "rol": "musculo",
+   "musculo": "gemelos",
+   "v": 457,
+   "i": 2322,
+   "o": 2140128
+  }
+ ]
+}

@@ -51,11 +51,20 @@ final class Maniqui {
     private var juntas: [Articulacion: SCNNode] = [:]
     private var volumenes: [Musculo: [SCNNode]] = [:]
 
+    /// Verdadero si se cargó el personaje de Resources/maniqui.*; falso si se usa el maniquí procedural de respaldo.
+    private(set) var usaMalla = false
+
     var musculosDisponibles: Set<Musculo> { Set(volumenes.keys) }
 
     init() {
         raiz.name = "pelvis"
-        construir()
+        construirEsqueleto()
+        if let piezas = MallasManiqui.geometrias() {
+            adjuntar(piezas)
+            usaMalla = true
+        } else {
+            construir()
+        }
         resaltar(principales: [], secundarios: [])
     }
 
@@ -160,6 +169,66 @@ final class Maniqui {
         return nodo
     }
 
+    private func nodoDe(_ articulacion: Articulacion) -> SCNNode {
+        juntas[articulacion] ?? SCNNode()
+    }
+
+    // MARK: - Esqueleto (común a los dos modelos)
+
+    private func construirEsqueleto() {
+        let columna = junta(.columna, en: raiz, pos: Medidas.columna)
+        _ = junta(.cuello, en: columna, pos: Medidas.cuello)
+        esqueletoBrazo(hombro: .hombroI, codo: .codoI, lado: 1, columna: columna)
+        esqueletoBrazo(hombro: .hombroD, codo: .codoD, lado: -1, columna: columna)
+        esqueletoPierna(cadera: .caderaI, rodilla: .rodillaI, tobillo: .tobilloI, lado: 1)
+        esqueletoPierna(cadera: .caderaD, rodilla: .rodillaD, tobillo: .tobilloD, lado: -1)
+    }
+
+    private func esqueletoBrazo(hombro: Articulacion, codo: Articulacion, lado: Float, columna: SCNNode) {
+        let h = junta(hombro, en: columna, pos: SIMD3<Float>(lado * Medidas.hombro.x, Medidas.hombro.y, Medidas.hombro.z))
+        let c = junta(codo, en: h, pos: SIMD3<Float>(0, -Medidas.brazo, 0))
+        let punto = SCNNode()
+        punto.name = "agarre"
+        punto.simdPosition = SIMD3<Float>(0, -(Medidas.antebrazo + Medidas.mano), 0)
+        c.addChildNode(punto)
+        if lado > 0 { manoI = punto } else { manoD = punto }
+    }
+
+    private func esqueletoPierna(cadera: Articulacion, rodilla: Articulacion, tobillo: Articulacion, lado: Float) {
+        let ch = junta(cadera, en: raiz, pos: SIMD3<Float>(lado * Medidas.cadera.x, Medidas.cadera.y, Medidas.cadera.z))
+        let r = junta(rodilla, en: ch, pos: SIMD3<Float>(0, -Medidas.muslo, 0))
+        _ = junta(tobillo, en: r, pos: SIMD3<Float>(0, -Medidas.pantorrilla, 0))
+    }
+
+    // MARK: - Personaje a partir de las mallas
+
+    /// Cuelga cada pieza (piel o capa muscular) del nodo de su articulación. Los músculos quedan
+    /// registrados en `volumenes` para poder resaltarlos y para detectar toques.
+    private func adjuntar(_ piezas: [(parte: ParteMalla, geometria: SCNGeometry)]) {
+        for (parte, geometria) in piezas {
+            let padre: SCNNode?
+            if parte.junta == "raiz" {
+                padre = raiz
+            } else {
+                padre = Articulacion(rawValue: parte.junta).flatMap { juntas[$0] }
+            }
+            guard let padre else { continue }
+
+            let esMusculo = parte.rol == "musculo"
+            geometria.materials = [material(esMusculo ? Paleta.musculoNeutro : Paleta.cuerpo)]
+            let nodo = SCNNode(geometry: geometria)
+            if esMusculo, let id = parte.musculo, let musculo = Musculo(rawValue: id) {
+                nodo.name = "musculo:" + id
+                volumenes[musculo, default: []].append(nodo)
+            } else {
+                nodo.name = parte.nombre
+            }
+            padre.addChildNode(nodo)
+        }
+    }
+
+    // MARK: - Maniquí procedural de respaldo
+
     private func capsula(_ radio: CGFloat, _ largo: CGFloat) -> SCNCapsule {
         SCNCapsule(capRadius: radio, height: max(largo, radio * 2 + 0.001))
     }
@@ -169,7 +238,7 @@ final class Maniqui {
         forma(SCNSphere(radius: 0.11), en: raiz, pos: .zero, escala: SIMD3<Float>(1.25, 0.85, 0.95))
 
         // Tronco
-        let columna = junta(.columna, en: raiz, pos: Medidas.columna)
+        let columna = nodoDe(.columna)
         forma(capsula(0.12, 0.52), en: columna, pos: SIMD3<Float>(0, 0.26, 0), escala: SIMD3<Float>(1.3, 1, 0.8))
         musculo(.pectorales, SCNSphere(radius: 0.075), en: columna, pos: SIMD3<Float>(0.085, 0.36, 0.085), escala: SIMD3<Float>(1.2, 0.8, 0.6))
         musculo(.pectorales, SCNSphere(radius: 0.075), en: columna, pos: SIMD3<Float>(-0.085, 0.36, 0.085), escala: SIMD3<Float>(1.2, 0.8, 0.6))
@@ -180,7 +249,7 @@ final class Maniqui {
         musculo(.lumbar, capsula(0.025, 0.18), en: columna, pos: SIMD3<Float>(-0.045, 0.08, -0.098))
 
         // Cuello y cabeza
-        let cuello = junta(.cuello, en: columna, pos: Medidas.cuello)
+        let cuello = nodoDe(.cuello)
         forma(SCNCylinder(radius: 0.04, height: 0.09), en: cuello, pos: SIMD3<Float>(0, 0.04, 0))
         forma(SCNSphere(radius: 0.105), en: cuello, pos: Medidas.cabeza, escala: SIMD3<Float>(0.9, 1.05, 1))
 
@@ -195,39 +264,34 @@ final class Maniqui {
     }
 
     private func construirBrazo(hombro: Articulacion, codo: Articulacion, lado: Float, columna: SCNNode) {
-        let h = junta(hombro, en: columna, pos: SIMD3<Float>(lado * Medidas.hombro.x, Medidas.hombro.y, Medidas.hombro.z))
+        let h = nodoDe(hombro)
         forma(SCNSphere(radius: 0.05), en: h, pos: .zero)
         forma(capsula(0.04, CGFloat(Medidas.brazo)), en: h, pos: SIMD3<Float>(0, -Medidas.brazo / 2, 0))
         musculo(.deltoides, SCNSphere(radius: 0.055), en: h, pos: SIMD3<Float>(lado * 0.01, -0.01, 0))
         musculo(.triceps, capsula(0.032, 0.22), en: h, pos: SIMD3<Float>(0, -0.15, -0.032))
         musculo(.biceps, capsula(0.030, 0.20), en: h, pos: SIMD3<Float>(0, -0.15, 0.032))
 
-        let c = junta(codo, en: h, pos: SIMD3<Float>(0, -Medidas.brazo, 0))
+        let c = nodoDe(codo)
         forma(SCNSphere(radius: 0.035), en: c, pos: .zero)
         forma(capsula(0.033, CGFloat(Medidas.antebrazo)), en: c, pos: SIMD3<Float>(0, -Medidas.antebrazo / 2, 0))
         musculo(.antebrazos, capsula(0.036, 0.20), en: c, pos: SIMD3<Float>(0, -0.14, 0))
 
-        let punto = SCNNode()
-        punto.name = "agarre"
-        punto.simdPosition = SIMD3<Float>(0, -(Medidas.antebrazo + Medidas.mano), 0)
-        c.addChildNode(punto)
-        forma(SCNSphere(radius: 0.04), en: punto, pos: .zero)
-        if lado > 0 { manoI = punto } else { manoD = punto }
+        forma(SCNSphere(radius: 0.04), en: lado > 0 ? manoI : manoD, pos: .zero)
     }
 
     private func construirPierna(cadera: Articulacion, rodilla: Articulacion, tobillo: Articulacion, lado: Float) {
-        let ch = junta(cadera, en: raiz, pos: SIMD3<Float>(lado * Medidas.cadera.x, Medidas.cadera.y, Medidas.cadera.z))
+        let ch = nodoDe(cadera)
         forma(capsula(0.06, CGFloat(Medidas.muslo)), en: ch, pos: SIMD3<Float>(0, -Medidas.muslo / 2, 0))
         musculo(.cuadriceps, capsula(0.055, 0.32), en: ch, pos: SIMD3<Float>(0, -0.21, 0.035))
         musculo(.isquiotibiales, capsula(0.055, 0.32), en: ch, pos: SIMD3<Float>(0, -0.21, -0.035))
         musculo(.aductores, capsula(0.04, 0.28), en: ch, pos: SIMD3<Float>(-lado * 0.035, -0.2, 0))
 
-        let r = junta(rodilla, en: ch, pos: SIMD3<Float>(0, -Medidas.muslo, 0))
+        let r = nodoDe(rodilla)
         forma(SCNSphere(radius: 0.045), en: r, pos: .zero)
         forma(capsula(0.045, CGFloat(Medidas.pantorrilla)), en: r, pos: SIMD3<Float>(0, -Medidas.pantorrilla / 2, 0))
         musculo(.gemelos, capsula(0.04, 0.25), en: r, pos: SIMD3<Float>(0, -0.2, -0.035))
 
-        let t = junta(tobillo, en: r, pos: SIMD3<Float>(0, -Medidas.pantorrilla, 0))
+        let t = nodoDe(tobillo)
         forma(SCNBox(width: 0.09, height: 0.07, length: 0.24, chamferRadius: 0.02), en: t,
               pos: SIMD3<Float>(0, -0.035, 0.06))
     }
