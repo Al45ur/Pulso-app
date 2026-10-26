@@ -14,6 +14,12 @@ open Pulso.xcodeproj
 
 En Xcode: target **Pulso** → *Signing & Capabilities* → elige tu *Team* y ejecuta. Pruebas: `Cmd+U`.
 
+## Usarla sin Mac: versión web
+
+`gym/web/` genera una página (`python3 gym/web/construir.py`) con el mismo personaje y los mismos ejercicios: catálogo,
+ficha 3D, rutinas, entrenamiento con registro de series y descanso, e historial. Publicada como Artifact de claude.ai,
+guarda los datos en la cuenta de quien la usa (`db`, subárbol privado) o, sin sesión, en el navegador. No incluye Siri.
+
 ## Pestañas y pantallas
 
 | Pestaña | Contenido |
