@@ -505,6 +505,86 @@
         "El trapecio y el serrato aparecen en algunas fuentes con poco respaldo; no se marcan.",
         "Los subtítulos del reel están incompletos, así que la técnica exacta de @dui.delgado (codos, rango, ritmo) debe validarse."
       ]
+    },
+    {
+      "id": "pajaro-polea-alta-cruzada",
+      "nombre": "Pájaro en polea alta cruzada",
+      "categoria": "Hombros",
+      "equipo": "Dos poleas altas, manijas individuales",
+      "musculosPrincipales": ["deltoides_posterior"],
+      "musculosSecundarios": ["trapecio"],
+      "descripcion": "Apertura posterior (reverse fly) con las poleas altas cruzadas. Los brazos se abren hacia los lados y ligeramente hacia atrás, con los codos apenas flexionados. Trabaja sobre todo la parte posterior (trasera) del deltoides; el trapecio y los músculos entre los omóplatos ayudan.",
+      "pasos": [
+        "Coloca las dos poleas a la altura de la cabeza o un poco más arriba y engancha una manija en cada una.",
+        "Ponte de frente a la máquina, en el centro. Cruza los brazos: con la mano izquierda toma la manija del lado derecho y con la derecha la del lado izquierdo.",
+        "Con el pecho alto, el abdomen firme y los codos ligeramente flexionados, parte con los brazos al frente, a la altura de los hombros.",
+        "Abre los brazos hacia los lados y un poco hacia atrás, guiando el movimiento con los codos, hasta que queden aproximadamente en línea con los hombros. Junta suavemente los omóplatos al final.",
+        "Regresa de forma controlada, sin dejar que el peso te jale hacia delante."
+      ],
+      "errores": [
+        "Usar demasiado peso y balancear el cuerpo: el trabajo sale del deltoides posterior y se pasa a la espalda baja o al impulso.",
+        "Flexionar y extender los codos como en una remada: el brazo debe moverse casi recto.",
+        "Encoger los hombros hacia las orejas.",
+        "Llevar los brazos muy atrás con la espalda arqueada."
+      ],
+      "seguridad": [
+        "Elige un peso ligero: es un ejercicio de aislamiento y se trabaja con repeticiones altas.",
+        "Mantén los codos ligeramente flexionados y los hombros abajo.",
+        "Controla también la fase de regreso."
+      ],
+      "series": 3, "repsMin": 12, "repsMax": 15, "descansoSeg": 60,
+      "props": [
+        { "tipo": "cable", "ancla": [-0.55, 2.0, 0.9], "hacia": "manoI" },
+        { "tipo": "cable", "ancla": [0.55, 2.0, 0.9], "hacia": "manoD" },
+        { "tipo": "manija", "mano": "I" },
+        { "tipo": "manija", "mano": "D" }
+      ],
+      "camara": { "azimut": 35, "altura": 1.25, "distancia": 3.4, "objetivoY": 1.1, "semiancho": 1.0 },
+      "faseMiniatura": 2,
+      "fases": [
+        {
+          "nombre": "Inicio",
+          "descripcion": "Brazos al frente, cruzados, a la altura de los hombros y con los codos ligeramente flexionados.",
+          "pose": {
+            "raiz": { "pos": [0, 0.897, 0], "pitch": 0 },
+            "art": {
+              "columna": [0], "hombroI": [88, -18], "hombroD": [88, -18],
+              "codoI": [15], "codoD": [15],
+              "caderaI": [3, 4], "caderaD": [3, 4], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        },
+        {
+          "nombre": "Ejecución",
+          "descripcion": "Abre los brazos hacia los lados guiando con los codos, sin flexionarlos más.",
+          "pose": {
+            "raiz": { "pos": [0, 0.897, 0], "pitch": 0 },
+            "art": {
+              "columna": [0], "hombroI": [90, 45], "hombroD": [90, 45],
+              "codoI": [15], "codoD": [15],
+              "caderaI": [3, 4], "caderaD": [3, 4], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        },
+        {
+          "nombre": "Final",
+          "descripcion": "Brazos en línea con los hombros, un poco hacia atrás, omóplatos suavemente juntos. Regresa controlando.",
+          "pose": {
+            "raiz": { "pos": [0, 0.897, 0], "pitch": 0 },
+            "art": {
+              "columna": [0], "hombroI": [90, 95], "hombroD": [90, 95],
+              "codoI": [15], "codoD": [15],
+              "caderaI": [3, 4], "caderaD": [3, 4], "rodillaI": [6], "rodillaD": [6], "tobilloI": [3], "tobilloD": [3]
+            }
+          }
+        }
+      ],
+      "pendienteValidacion": [
+        "Altura exacta de las poleas y ángulo de los brazos: las guías consultadas difieren (desde la altura de la frente hasta por encima de los hombros). Validar con el reel original y con un entrenador.",
+        "Series, repeticiones y descanso: las guías hablan de repeticiones altas con peso ligero; las cifras son orientativas.",
+        "Músculos secundarios (trapecio, romboides) vienen de guías de entrenamiento, no de estudios. El infraespinoso y el redondo menor (manguito rotador) trabajan pero el modelo no los representa.",
+        "Los fotogramas del reel ya no estaban a la vista al añadir esta ficha: el movimiento se modeló a partir de la descripción «pájaro en polea» y de las guías en línea."
+      ]
     }
   ]
 }

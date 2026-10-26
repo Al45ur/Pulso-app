@@ -78,7 +78,7 @@ Las frases están en español: el iPhone y Siri deben estar en español.
    articulaciones redondeadas, cara simplificada, manos sin dedos ni deformación de la piel al doblar; no es fotorrealista. Para un nivel de estudio
    hace falta un personaje con esqueleto (USDZ) y malla muscular separada, con licencia comercial. `Maniqui` está aislado:
    basta con otra clase con los mismos métodos (`aplicar(_:)`, `resaltar(...)`, `manoI`, `manoD`).
-2. **Más ejercicios.** Hay 7 (4 de tríceps, 1 de piernas, 2 de hombros). Los filtros muestran solo categorías con ejercicios.
+2. **Más ejercicios.** Hay 8 (4 de tríceps, 1 de piernas, 3 de hombros). Los filtros muestran solo categorías con ejercicios.
 3. **Validación de contenido** por un entrenador: ver `pendienteValidacion` de cada ficha.
 4. **Mapa del cuerpo y Progreso en la app nativa.** Solo existen en la web (ahí se pueden probar sin Mac). En Swift ya están
    el aspecto «piel/anatomía» y `CatalogoEjercicios.ejercicios(para:)`; falta la interfaz SwiftUI.

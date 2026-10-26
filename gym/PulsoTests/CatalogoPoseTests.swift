@@ -34,7 +34,7 @@ final class CatalogoPoseTests: XCTestCase {
     func testElCatalogoCargaYEsValido() {
         let catalogo = CatalogoEjercicios.compartido
         XCTAssertNil(catalogo.error)
-        XCTAssertEqual(catalogo.fichas.count, 7)
+        XCTAssertEqual(catalogo.fichas.count, 8)
         XCTAssertEqual(Set(catalogo.fichas.map(\.id)).count, catalogo.fichas.count)
         XCTAssertEqual(catalogo.categorias, ["Tríceps", "Piernas", "Hombros"])
     }
@@ -71,6 +71,15 @@ final class CatalogoPoseTests: XCTestCase {
         // El press y la elevación lateral no marcan las mismas cabezas del deltoides como principales.
         let lateral = try self.ficha("elevacion-lateral-polea-una-mano")
         XCTAssertTrue(ficha.principales.isDisjoint(with: lateral.principales))
+    }
+
+    func testElPajaroEnPoleaTrabajaElDeltoidesPosterior() throws {
+        let pajaro = try ficha("pajaro-polea-alta-cruzada")
+        XCTAssertEqual(pajaro.categoria, "Hombros")
+        XCTAssertEqual(pajaro.principales, [.deltoidesPosterior])
+        XCTAssertEqual(pajaro.rol(de: .trapecio), .secundario)
+        XCTAssertFalse(pajaro.principales.contains(.triceps) || pajaro.secundarios.contains(.triceps))
+        XCTAssertEqual(pajaro.props.filter { $0.tipo == "cable" }.count, 2, "una polea por mano")
     }
 
     func testLaRotacionDelHombroSeDecodificaYSeInterpola() throws {
@@ -179,6 +188,8 @@ final class CatalogoPoseTests: XCTestCase {
             ("peso-muerto-rumano-mancuernas", 1, 0.190, 0.696, 0.158),
             ("peso-muerto-rumano-mancuernas", 2, 0.190, 0.377, 0.233),
             ("elevacion-lateral-polea-una-mano", 2, 0.274, 0.798, 0.054),
+            ("pajaro-polea-alta-cruzada", 0, 0.005, 1.457, 0.573),
+            ("pajaro-polea-alta-cruzada", 2, 0.787, 1.477, -0.052),
             ("press-hombros-mancuernas-banco-inclinado", 0, 0.400, 1.142, 0.039),
             ("press-hombros-mancuernas-banco-inclinado", 1, 0.432, 1.337, -0.173),
             ("press-hombros-mancuernas-banco-inclinado", 2, 0.274, 1.540, -0.221)
