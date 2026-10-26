@@ -219,6 +219,44 @@ final class CatalogoPoseTests: XCTestCase {
         }
     }
 
+    func testElAspectoPielMuestraSoloLosMusculosMarcadosYAnatomiaTodos() throws {
+        let rdl = try ficha("peso-muerto-rumano-mancuernas")
+        let maniqui = Maniqui()
+        func nodosMusculo(_ musculo: Musculo) -> [SCNNode] {
+            var nodos: [SCNNode] = []
+            maniqui.raiz.enumerateHierarchy { nodo, _ in if nodo.name == "musculo:" + musculo.rawValue { nodos.append(nodo) } }
+            return nodos
+        }
+        let short = try XCTUnwrap(maniqui.raiz.childNode(withName: "short_pelvis", recursively: true))
+        let pie = try XCTUnwrap(maniqui.raiz.childNode(withName: "pie_I", recursively: true))
+
+        maniqui.resaltar(principales: rdl.principales, secundarios: rdl.secundarios, aspecto: .piel)
+        XCTAssertTrue(nodosMusculo(.gluteos).allSatisfy { !$0.isHidden }, "el músculo marcado se ve")
+        XCTAssertTrue(nodosMusculo(.biceps).allSatisfy(\.isHidden), "un músculo sin relación no se dibuja sobre la piel")
+        XCTAssertFalse(short.isHidden)
+        XCTAssertLessThan(try XCTUnwrap(short.geometry?.firstMaterial).transparency, 0.5, "el short se aclara si el glúteo está bajo la prenda")
+
+        maniqui.resaltar(principales: [.triceps], secundarios: [], aspecto: .piel)
+        XCTAssertEqual(try XCTUnwrap(short.geometry?.firstMaterial).transparency, 1, accuracy: 0.001)
+
+        maniqui.resaltar(principales: [], secundarios: [], seleccionado: .biceps, aspecto: .anatomia)
+        XCTAssertTrue(Musculo.allCases.allSatisfy { m in nodosMusculo(m).allSatisfy { !$0.isHidden } }, "en anatomía se ven todos")
+        XCTAssertTrue(short.isHidden && pie.isHidden, "en anatomía no hay ropa ni calzado")
+    }
+
+    func testElMapaDelCuerpoRelacionaCadaMusculoConSusEjercicios() throws {
+        let catalogo = CatalogoEjercicios.compartido
+        let triceps = catalogo.ejercicios(para: .triceps)
+        XCTAssertEqual(triceps.principal.count, 4)
+        XCTAssertTrue(triceps.secundario.contains { $0.id == "press-hombros-mancuernas-banco-inclinado" })
+        XCTAssertTrue(catalogo.ejercicios(para: .biceps).principal.isEmpty, "un músculo sin ejercicios es una brecha visible")
+        for ficha in catalogo.fichas {
+            for musculo in ficha.principales {
+                XCTAssertTrue(catalogo.ejercicios(para: musculo).principal.contains(ficha), "\(ficha.id) debe aparecer en \(musculo)")
+            }
+        }
+    }
+
     // MARK: - Rutinas
 
     func testAgregarYQuitarEjerciciosDeMiRutina() throws {

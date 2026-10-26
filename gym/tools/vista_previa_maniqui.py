@@ -4,7 +4,7 @@
 Usa la misma cinemática que la app (verificar_poses.py), z-buffer y eliminación de caras traseras,
 así que si una malla tiene las caras al revés aparece vacía o rota, igual que pasaría en SceneKit.
 
-Uso:  python3 gym/tools/vista_previa_maniqui.py SALIDA_DIR [ejercicio-id] [--neutra]
+Uso:  python3 gym/tools/vista_previa_maniqui.py SALIDA_DIR [ejercicio-id] [--neutra] [--anatomia]
 Requiere numpy y Pillow.
 """
 import json
@@ -22,6 +22,10 @@ RAIZ = Path(__file__).resolve().parent.parent / "Pulso" / "Resources"
 COLORES = {
     "cuerpo": np.array([51, 71, 97]) / 255.0,
     "neutro": np.array([77, 102, 135]) / 255.0,
+    "piel": np.array([214, 163, 129]) / 255.0,
+    "ropa": np.array([22, 24, 30]) / 255.0,
+    "calzado": np.array([232, 234, 238]) / 255.0,
+    "ojos": np.array([14, 14, 18]) / 255.0,
     "principal": np.array([255, 64, 51]) / 255.0,
     "secundario": np.array([255, 153, 38]) / 255.0,
     "fondo": np.array([10, 23, 38]) / 255.0,
@@ -131,16 +135,37 @@ def dibujar_props(foto, ficha, J, vista, tam=420):
         d.line([pt(a), pt(b)], fill=col, width=6 if tipo == "banco" else 3)
 
 
+CUBIERTOS = {"gluteos", "cuadriceps", "isquiotibiales", "aductores"}
+LOOK = {"anatomia": False}   # False = piel; True = anatomía gris azulada
+
+
+def color_de(p, principales, secundarios):
+    anatomia = LOOK["anatomia"]
+    if p["rol"] == "musculo":
+        m = p["musculo"]
+        if m in principales:
+            return COLORES["principal"]
+        if m in secundarios:
+            return COLORES["secundario"]
+        return COLORES["neutro"] if anatomia else None   # en modo piel solo se dibujan los resaltados
+    if p["rol"] == "piel" or p["rol"] == "cuerpo":
+        return COLORES["cuerpo"] if anatomia else COLORES["piel"]
+    if anatomia and p["rol"] in ("ropa", "calzado"):
+        return None   # en modo anatomía no se dibuja la ropa
+    if p["rol"] == "ropa" and CUBIERTOS & (principales | secundarios):
+        return None   # se resalta un músculo que queda bajo el short: la ropa no se dibuja en la vista previa
+    return COLORES[p["rol"]]
+
+
 def render(partes, pose, ficha, principales, secundarios, vista, tam=420):
     J = V.esqueleto(pose)
     tri, col, nor = [], [], []
     for p in partes:
+        c = color_de(p, principales, secundarios)
+        if c is None:
+            continue
         v, n = a_mundo(p, J)
         f = p["caras"]
-        c = COLORES["cuerpo"]
-        if p["rol"] == "musculo":
-            m = p["musculo"]
-            c = COLORES["principal"] if m in principales else COLORES["secundario"] if m in secundarios else COLORES["neutro"]
         tri.append(v[f]); nor.append(n[f]); col.append(np.tile(c, (len(f), 1)))
     foto = rasterizar(np.vstack(tri), np.vstack(col), np.vstack(nor), vista, tam)
     if ficha:
@@ -154,13 +179,14 @@ def main():
     salida = Path(sys.argv[1]); salida.mkdir(parents=True, exist_ok=True)
     filtro = next((a for a in sys.argv[2:] if not a.startswith("--")), None)
     partes = cargar()
+    LOOK["anatomia"] = "--anatomia" in sys.argv
     if "--neutra" in sys.argv:
         pose = {"raiz": {"pos": [0, 0.9, 0], "pitch": 0}, "art": {"hombroI": [0, 12], "hombroD": [0, 12]}}
         vistas = ("frente", "perfil", "espalda")
         hoja = Image.new("RGB", (420 * 3, 420))
         for i, v in enumerate(vistas):
             hoja.paste(render(partes, pose, None, {"triceps", "gluteos"}, {"isquiotibiales", "dorsales"}, v), (420 * i, 0))
-        hoja.save(salida / "neutra.png")
+        hoja.save(salida / ("neutra_anatomia.png" if LOOK["anatomia"] else "neutra.png"))
         print("neutra.png")
         return
     datos = json.loads((RAIZ / "ejercicios.json").read_text())

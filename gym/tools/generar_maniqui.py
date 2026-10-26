@@ -18,8 +18,10 @@ from pathlib import Path
 
 import numpy as np
 
-N = 56          # puntos por sección
-PASO = 0.010    # separación entre anillos tras el remuestreo (m)
+N = 64          # puntos por sección
+PASO = 0.008    # separación entre anillos tras el remuestreo (m)
+FRACCION_RELIEVE = 0.6   # parte de la altura de cada músculo que se modela en la propia piel
+ESCALA_RELIEVE = 1.35    # exagera un poco el relieve para que se lea a distancia de teléfono
 
 
 # --- Mallas ----------------------------------------------------------------------------
@@ -144,6 +146,11 @@ def con_esferas(secciones, ini=False, fin=False):
 S = lambda t, a, b, ra, rb: (t, a, b, ra, rb)  # noqa: E731
 
 
+def grueso(secciones, f):
+    """Engrosa los radios de una lista de secciones (para dar más volumen a una extremidad)."""
+    return [(t, a, b, ra * f, rb * f) for (t, a, b, ra, rb) in secciones]
+
+
 # --- Piel ----------------------------------------------------------------------------------------
 def pelvis():
     return tubo(con_esferas([
@@ -169,35 +176,55 @@ def torso():
 
 
 def cabeza():
-    cuello = tubo(con_esferas([S(-0.01, 0, 0, 0.052, 0.054), S(0.07, 0, 0, 0.050, 0.052)]), p=2.0)
+    cuello = tubo(con_esferas([S(-0.05, 0, -0.004, 0.092, 0.070), S(-0.02, 0, 0, 0.066, 0.062), S(0.0, 0, 0, 0.054, 0.056), S(0.07, 0, 0, 0.050, 0.052)]), p=2.2)
     craneo = tubo(con_esferas([
+        S(0.03, 0, 0, 0.050, 0.052),
         S(0.06, 0, 0.004, 0.052, 0.058),
         S(0.095, 0, 0.020, 0.064, 0.082),   # mandíbula
         S(0.13, 0, 0.012, 0.082, 0.096),
         S(0.17, 0, 0.004, 0.092, 0.106),
         S(0.20, 0, -0.002, 0.088, 0.100),
     ], fin=True), p=2.0)
-    return unir([cuello, craneo])
+    nariz = tubo(con_esferas([
+        S(0.092, 0, 0.122, 0.004, 0.007),
+        S(0.104, 0, 0.116, 0.008, 0.017),
+        S(0.114, 0, 0.112, 0.010, 0.021),
+        S(0.122, 0, 0.108, 0.007, 0.013),
+    ], fin=True), eje="z", paso=0.004, n=24)
+    oreja = tubo(con_esferas([
+        S(0.078, 0.135, -0.004, 0.020, 0.011),
+        S(0.086, 0.135, -0.004, 0.024, 0.013),
+        S(0.094, 0.135, -0.002, 0.018, 0.008),
+    ], fin=True), eje="x", paso=0.004, n=24)
+    return unir([cuello, craneo, nariz, oreja, espejo(oreja)])
+
+
+def ojo():
+    # Esfera pequeña a la altura de los ojos (y ≈ 0.145 sobre el cuello), a la izquierda del personaje.
+    esfera = tubo(con_esferas([S(-0.004, 0.034, 0.100, 0.007, 0.007), S(0.004, 0.034, 0.100, 0.007, 0.007)],
+                              ini=True, fin=True), paso=0.002, n=20)
+    esfera.v = esfera.v + np.array([0.0, 0.145, 0.0])
+    return esfera
 
 
 def brazo():
-    return tubo(con_esferas([
+    return tubo(con_esferas(grueso([
         S(0.0, 0, 0, 0.054, 0.056),
         S(-0.06, 0, 0, 0.052, 0.054),
         S(-0.15, 0, 0, 0.046, 0.048),
         S(-0.25, 0, 0, 0.039, 0.041),
         S(-0.30, 0, 0, 0.037, 0.038),
-    ], ini=True, fin=True))
+    ], 1.14), ini=True, fin=True))
 
 
 def antebrazo():
-    codo_a_muneca = tubo(con_esferas([
+    codo_a_muneca = tubo(con_esferas(grueso([
         S(0.0, 0, 0, 0.037, 0.039),
         S(-0.06, 0, 0, 0.041, 0.043),
         S(-0.13, 0, 0, 0.036, 0.038),
         S(-0.21, 0, 0, 0.028, 0.032),
         S(-0.27, 0, 0, 0.025, 0.028),
-    ], ini=True))
+    ], 1.10), ini=True))
     mano = tubo(con_esferas([
         S(-0.255, 0, 0, 0.026, 0.028),
         S(-0.295, 0, 0.002, 0.044, 0.020),
@@ -208,33 +235,54 @@ def antebrazo():
 
 
 def muslo():
-    return tubo(con_esferas([
+    return tubo(con_esferas(grueso([
         S(0.0, 0, 0, 0.086, 0.090),
         S(-0.10, 0, 0, 0.088, 0.094),
         S(-0.20, 0, 0, 0.080, 0.086),
         S(-0.31, 0, 0, 0.064, 0.070),
         S(-0.42, 0, 0, 0.051, 0.055),
-    ], ini=True, fin=True))
+    ], 1.08), ini=True, fin=True))
 
 
 def pantorrilla():
-    return tubo(con_esferas([
+    return tubo(con_esferas(grueso([
         S(0.0, 0, 0, 0.051, 0.055),
         S(-0.09, 0, -0.012, 0.056, 0.064),   # gemelo
         S(-0.20, 0, -0.006, 0.048, 0.054),
         S(-0.33, 0, 0, 0.036, 0.040),
         S(-0.41, 0, 0, 0.032, 0.034),
-    ], ini=True, fin=True))
+    ], 1.06), ini=True, fin=True))
 
 
-def pie():
+def zapatilla():
+    """Zapatilla: la suela queda a -0.07 m del tobillo (Medidas.tobilloSuelo), como el pie anterior."""
     return tubo(con_esferas([
-        S(-0.062, 0, -0.036, 0.036, 0.034),
-        S(-0.01, 0, -0.035, 0.044, 0.035),
-        S(0.07, 0, -0.040, 0.048, 0.030),
-        S(0.14, 0, -0.046, 0.047, 0.024),
-        S(0.172, 0, -0.050, 0.034, 0.018),
-    ], fin=True), eje="z", p=2.4)
+        S(-0.078, 0, -0.033, 0.036, 0.037),
+        S(-0.040, 0, -0.030, 0.046, 0.040),
+        S(0.020, 0, -0.036, 0.050, 0.034),
+        S(0.100, 0, -0.042, 0.050, 0.028),
+        S(0.160, 0, -0.050, 0.042, 0.020),
+    ], fin=True), eje="z", p=2.6)
+
+
+def short_pelvis():
+    return tubo(con_esferas([
+        S(0.092, 0, 0, 0.162, 0.118),
+        S(0.074, 0, 0, 0.164, 0.120),
+        S(0.020, 0, -0.004, 0.186, 0.146),
+        S(-0.040, 0, -0.010, 0.192, 0.152),
+        S(-0.095, 0, -0.004, 0.176, 0.136),
+        S(-0.130, 0, 0.004, 0.130, 0.105),
+    ], fin=True), p=2.4)
+
+
+def short_pierna():
+    return tubo([
+        S(0.040, 0, -0.004, 0.118, 0.126),
+        S(-0.060, 0, -0.004, 0.121, 0.130),
+        S(-0.150, 0, 0, 0.114, 0.123),
+        S(-0.225, 0, 0, 0.106, 0.114),
+    ])
 
 
 # --- Capas musculares --------------------------------------------------------------------------
@@ -252,15 +300,39 @@ def ventana(x, lo, hi, borde):
     return suave(x, lo, lo + borde) * (1 - suave(x, hi - borde, hi))
 
 
-def capa(piel, mascara, altura, umbral=0.10, separacion=0.0012):
-    """Recorta de la piel la zona donde mascara >= umbral y la eleva `separacion + altura * mascara`.
+def evaluar(piel, mascara):
+    n = normales(piel)
+    x, y, z = piel.v[:, 0], piel.v[:, 1], piel.v[:, 2]
+    return np.clip(mascara(x, y, z, n[:, 0], n[:, 1], n[:, 2]), 0, 1)
+
+
+def simetrica(mascara):
+    """Refleja una máscara definida a la izquierda para que valga en los dos lados de una pieza central."""
+    return lambda x, y, z, nx, ny, nz: np.maximum(mascara(x, y, z, nx, ny, nz), mascara(-x, y, z, -nx, ny, nz))
+
+
+def con_relieve(piel, reglas):
+    """Modela los músculos en la propia piel: la desplaza hacia fuera según la suma de FRACCION_RELIEVE*altura*máscara.
+
+    `reglas` es una lista de (máscara, altura). Así la piel muestra el relieve anatómico aunque no haya nada resaltado."""
+    n = normales(piel)
+    d = np.zeros(len(piel.v))
+    for mascara, altura in reglas:
+        d += FRACCION_RELIEVE * ESCALA_RELIEVE * altura * evaluar(piel, mascara)
+    return Malla(piel.v + n * d[:, None], piel.f)
+
+
+def capa(piel, mascara, altura, relieve=None, umbral=0.10, separacion=0.0012):
+    """Recorta la zona donde mascara >= umbral y la eleva sobre la piel (con relieve, si se da).
 
     Los triángulos que cruzan el umbral se cortan por el punto exacto (interpolación lineal), así el contorno
     del músculo es liso y no depende de la resolución de la malla."""
-    n = normales(piel)
-    x, y, z = piel.v[:, 0], piel.v[:, 1], piel.v[:, 2]
-    m = np.clip(mascara(x, y, z, n[:, 0], n[:, 1], n[:, 2]), 0, 1)
-    P = piel.v + n * (separacion + altura * m)[:, None]
+    m = evaluar(piel, mascara)
+    base = relieve if relieve is not None else piel
+    n = normales(base)
+    resto = (1 - FRACCION_RELIEVE) if relieve is not None else 1.0
+    P = base.v + n * (separacion + resto * ESCALA_RELIEVE * altura * m)[:, None]
+    f = piel.f
 
     verts, caras = [], []
     originales, cortes = {}, {}
@@ -280,7 +352,7 @@ def capa(piel, mascara, altura, umbral=0.10, separacion=0.0012):
             verts.append(P[lo] + (P[hi] - P[lo]) * t)
         return cortes[clave]
 
-    for tri in piel.f[m[piel.f].max(axis=1) >= umbral]:
+    for tri in f[m[f].max(axis=1) >= umbral]:
         poligono = []
         for a, b in ((tri[0], tri[1]), (tri[1], tri[2]), (tri[2], tri[0])):
             dentro_a, dentro_b = m[a] >= umbral, m[b] >= umbral
@@ -355,6 +427,18 @@ def musculos(piel):
     return r
 
 
+def relieves_extra():
+    """Detalles de la piel que no son un músculo resaltable: clavículas y costillas/serrato."""
+    return {
+        "torso": [
+            (lambda x, y, z, nx, ny, nz: suave(nz, 0.2, 0.6) * campana(y, 0.428, 0.020)
+             * ventana(np.abs(x), 0.03, 0.17, 0.04), 0.006),
+            (lambda x, y, z, nx, ny, nz: suave(np.abs(nx), 0.45, 0.85) * ventana(y, 0.08, 0.30, 0.05)
+             * (0.55 + 0.45 * np.cos((y - 0.08) * 2 * np.pi / 0.048)), 0.007),
+        ],
+    }
+
+
 # --- Ensamblado ---------------------------------------------------------------------------------
 JUNTA_DE = {"brazo": "hombro", "antebrazo": "codo", "muslo": "cadera", "pantorrilla": "rodilla", "pie": "tobillo",
             "torso": "columna", "pelvis": "raiz", "cabeza": "cuello"}
@@ -364,26 +448,47 @@ CENTRALES = {"abdomen", "dorsales", "trapecio"}              # una sola malla ce
 
 
 def partes():
-    """Lista de (nombre, junta, rol, músculo, malla). La junta es 'raiz' (pelvis) o un nombre de Articulacion."""
+    """Lista de (nombre, junta, rol, músculo, malla). La junta es 'raiz' (pelvis) o un nombre de Articulacion.
+
+    Roles: piel, ropa, calzado, ojos (colores del personaje) y musculo (capa que se resalta)."""
     pieles = {
         "pelvis": pelvis(), "torso": torso(), "cabeza": cabeza(), "brazo": brazo(), "antebrazo": antebrazo(),
-        "muslo": muslo(), "pantorrilla": pantorrilla(), "pie": pie(),
+        "muslo": muslo(), "pantorrilla": pantorrilla(),
     }
-    lista = []
-    for nombre, malla in pieles.items():
-        base = JUNTA_DE[nombre]
-        if nombre in PARES:
-            lista.append((f"{nombre}_I", base + "I", "cuerpo", None, malla))
-            lista.append((f"{nombre}_D", base + "D", "cuerpo", None, espejo(malla)))
-        else:
-            lista.append((nombre, base, "cuerpo", None, malla))
+    reglas_musculos = musculos(pieles)
 
-    for musculo, (sobre, mascara, altura) in musculos(pieles).items():
-        izquierda = capa(pieles[sobre], mascara, altura)
+    # Relieve: cada pieza de piel se modela con los músculos que lleva encima.
+    reglas = {nombre: [] for nombre in pieles}
+    for musculo, (sobre, mascara, altura) in reglas_musculos.items():
+        mascara_piel = simetrica(mascara) if musculo in SIMETRICOS_EN_TRONCO else mascara
+        reglas[sobre].append((mascara_piel, altura))
+    for sobre, extra in relieves_extra().items():
+        reglas[sobre].extend(extra)
+    reliefs = {nombre: (con_relieve(pieles[nombre], reglas[nombre]) if reglas[nombre] else pieles[nombre]) for nombre in pieles}
+
+    lista = []
+
+    def agregar_par(nombre, base, rol, malla, musculo=None):
+        lista.append((f"{nombre}_I", base + "I", rol, musculo, malla))
+        lista.append((f"{nombre}_D", base + "D", rol, musculo, espejo(malla)))
+
+    for nombre, malla in reliefs.items():
+        if nombre in PARES:
+            agregar_par(nombre, JUNTA_DE[nombre], "piel", malla)
+        else:
+            lista.append((nombre, JUNTA_DE[nombre], "piel", None, malla))
+
+    agregar_par("pie", "tobillo", "calzado", zapatilla())
+    lista.append(("short_pelvis", "raiz", "ropa", None, short_pelvis()))
+    agregar_par("short", "cadera", "ropa", short_pierna())
+    lista.append(("ojo_I", "cuello", "ojos", None, ojo()))
+    lista.append(("ojo_D", "cuello", "ojos", None, espejo(ojo())))
+
+    for musculo, (sobre, mascara, altura) in reglas_musculos.items():
+        izquierda = capa(pieles[sobre], mascara, altura, relieve=reliefs[sobre])
         base = JUNTA_DE[sobre]
         if sobre in PARES:
-            lista.append((f"{musculo}_I", base + "I", "musculo", musculo, izquierda))
-            lista.append((f"{musculo}_D", base + "D", "musculo", musculo, espejo(izquierda)))
+            agregar_par(musculo, base, "musculo", izquierda, musculo)
         elif musculo in SIMETRICOS_EN_TRONCO:
             lista.append((f"{musculo}_I", base, "musculo", musculo, izquierda))
             lista.append((f"{musculo}_D", base, "musculo", musculo, espejo(izquierda)))
@@ -393,10 +498,10 @@ def partes():
 
 
 def exportar(destino: Path):
-    manifiesto = {"version": 1, "partes": []}
+    manifiesto = {"version": 2, "partes": []}
     binario = bytearray()
     for nombre, junta, rol, musculo, malla in partes():
-        if rol == "cuerpo":
+        if rol != "musculo":
             assert volumen(malla) > 0, f"{nombre}: caras hacia dentro"
         nv, ni = len(malla.v), malla.f.size
         manifiesto["partes"].append({

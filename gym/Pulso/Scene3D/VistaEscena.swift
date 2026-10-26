@@ -63,11 +63,9 @@ struct VistaEscena: UIViewRepresentable {
         @objc func tocar(_ gesto: UITapGestureRecognizer) {
             guard let vista, let alTocar else { return }
             let resultados = vista.hitTest(gesto.location(in: vista), options: nil)
-            for resultado in resultados {
-                if let musculo = Maniqui.musculo(de: resultado.node) {
-                    alTocar(musculo)
-                    return
-                }
+            // Solo cuenta lo que queda delante: si lo primero tocado es la piel, no se elige un músculo del otro lado.
+            if let primero = resultados.first, let musculo = Maniqui.musculo(de: primero.node) {
+                alTocar(musculo)
             }
         }
     }

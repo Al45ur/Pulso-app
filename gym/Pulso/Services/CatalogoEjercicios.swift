@@ -59,6 +59,12 @@ struct CatalogoEjercicios {
         fichas.first { $0.id == id }
     }
 
+    /// Ejercicios que trabajan un músculo: primero los que lo tienen como principal y luego como secundario.
+    func ejercicios(para musculo: Musculo) -> (principal: [FichaEjercicio], secundario: [FichaEjercicio]) {
+        (fichas.filter { $0.musculosPrincipales.contains(musculo) },
+         fichas.filter { $0.musculosSecundarios.contains(musculo) })
+    }
+
     /// Categorías en el orden en que aparecen en el catálogo.
     var categorias: [String] {
         var vistas: [String] = []

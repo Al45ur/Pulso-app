@@ -6,7 +6,7 @@ struct ParteMalla: Decodable {
     let nombre: String
     /// «raiz» (la pelvis) o el nombre de una `Articulacion`.
     let junta: String
-    /// «cuerpo» o «musculo».
+    /// «piel», «ropa», «calzado», «ojos» o «musculo».
     let rol: String
     let musculo: String?
     let v: Int

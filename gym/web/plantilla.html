@@ -90,6 +90,7 @@
   .overlay.bottom { bottom: 0; justify-content: center; }
   .views { display: flex; gap: 6px; }
   .views .chip { padding: 8px 12px; background: rgba(11, 22, 38, 0.82); }
+  .views .chip[aria-pressed="true"] { background: var(--neon); color: var(--bg); }
   .tip { max-width: 62%; background: rgba(11, 22, 38, 0.94); border: 1px solid var(--line); border-radius: 12px; padding: 8px 12px; font-size: 13px; }
   .tip b { font: 700 17px var(--font-display); letter-spacing: 0.02em; display: block; }
   .tip small { color: var(--muted); display: block; margin-top: 2px; }
@@ -134,14 +135,34 @@
   .tabbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; background: rgba(7, 17, 31, 0.96); border-top: 1px solid var(--line);
     padding-top: 6px; padding-bottom: env(safe-area-inset-bottom, 0px);
     padding-left: max(8px, env(safe-area-inset-left, 0px)); padding-right: max(8px, env(safe-area-inset-right, 0px)); }
-  .tabbar .in { max-width: 720px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); }
-  .tabbar button { appearance: none; background: none; border: 0; color: var(--muted); display: grid; justify-items: center; gap: 3px; padding: 6px 0 8px; font: 600 12px var(--font-body); cursor: pointer; }
+  .tabbar .in { max-width: 720px; margin: 0 auto; display: grid; grid-template-columns: repeat(5, 1fr); }
+  .tabbar button { appearance: none; background: none; border: 0; color: var(--muted); display: grid; justify-items: center; gap: 3px; padding: 6px 0 8px; font: 600 11px var(--font-body); cursor: pointer; min-width: 0; }
   .tabbar button[aria-current="page"] { color: var(--neon); }
   .tabbar svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
   .toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(130px + env(safe-area-inset-bottom, 0px)); z-index: 50;
     background: var(--neon); color: var(--bg); font-weight: 600; border-radius: 999px; padding: 10px 18px; max-width: 90vw; text-align: center; }
   .modal { position: fixed; inset: 0; z-index: 60; background: rgba(3, 8, 15, 0.78); display: grid; place-items: center; padding: 20px; }
   .modal .card { max-width: 380px; width: 100%; display: grid; gap: 14px; }
+  .muscle-chip { display: inline-flex; align-items: center; gap: 6px; }
+  .muscle-chip small { font-size: 11px; opacity: 0.75; }
+  .muscle-chip.vacio { opacity: 0.55; border-style: dashed; }
+  .fila-ej { display: flex; align-items: center; gap: 10px; width: 100%; text-align: left; cursor: pointer; color: inherit; font: inherit;
+    background: var(--panel-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .fila-ej .info { min-width: 0; flex: 1; }
+  .fila-ej .nombre { font-weight: 600; }
+  .galeria { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; }
+  .foto { position: relative; border: 2px solid transparent; border-radius: 12px; overflow: hidden; background: var(--panel-2); cursor: pointer; padding: 0; color: inherit; font: inherit; text-align: left; }
+  .foto.sel { border-color: var(--neon); }
+  .foto img { display: block; width: 100%; aspect-ratio: 3 / 4; object-fit: cover; }
+  .foto span { position: absolute; left: 0; right: 0; bottom: 0; font-size: 11px; font-weight: 600; padding: 14px 6px 4px; background: linear-gradient(transparent, rgba(3, 8, 15, 0.9)); }
+  .comparar { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .comparar figure { margin: 0; display: grid; gap: 6px; }
+  .comparar img { width: 100%; aspect-ratio: 3 / 4; object-fit: cover; border-radius: 12px; background: var(--panel-2); }
+  .comparar figcaption { font-size: 12px; color: var(--muted); }
+  .guia-fig { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .guia-fig figure { margin: 0; text-align: center; font-size: 12px; color: var(--muted); }
+  .guia-fig img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 12px; background: var(--panel-2); }
+  input[type="date"] { width: 100%; background: var(--panel); color: var(--text); border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; font: 500 16px var(--font-body); color-scheme: dark; }
   .estado { font-size: 12px; color: var(--muted); display: flex; gap: 6px; align-items: center; }
   @media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
 </style>
@@ -150,8 +171,10 @@
 <div id="franja" class="franja" hidden></div>
 <nav class="tabbar" id="tabbar" aria-label="Secciones"><div class="in">
   <button data-ir="catalogo"><svg viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3 9v6M21 9v6M6.5 12h11"/></svg>Ejercicios</button>
+  <button data-ir="mapa"><svg viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="2.2"/><path d="M8 9h8l1.5 5h-2L15 21h-2.2L12 15l-.8 6H9l-.5-7h-2z"/></svg>Mapa</button>
   <button data-ir="rutinas"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M8 9h8M8 13h8M8 17h5"/></svg>Rutinas</button>
   <button data-ir="historial"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Historial</button>
+  <button data-ir="progreso"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="3"/><circle cx="12" cy="13" r="3.5"/><path d="M8 6l1.5-2h5L16 6"/></svg>Progreso</button>
 </div></nav>
 <div id="toast" class="toast" hidden></div>
 <div id="modal" class="modal" hidden></div>
@@ -225,6 +248,35 @@
       if (this.modo === "nube") { await this.refHistorial().doc(s.id).set(s); return; }
       const l = this.leerLocal("pulso.historial", []); l.push(s); this.escribirLocal("pulso.historial", l);
     },
+    /* Fotos de progreso: en la cuenta (un documento por foto, <256 KiB) o en IndexedDB del navegador. */
+    refFotos() { return this.refEstado().collection("fotos"); },
+    idb() {
+      if (this._idb) return this._idb;
+      this._idb = new Promise((res, rej) => {
+        try {
+          const r = indexedDB.open("pulso-fotos", 1);
+          r.onupgradeneeded = () => r.result.createObjectStore("fotos", { keyPath: "id" });
+          r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error || new Error("IndexedDB no disponible"));
+        } catch (e) { rej(e); }
+      });
+      return this._idb;
+    },
+    async idbOp(modo, fn) {
+      const db = await this.idb();
+      return new Promise((res, rej) => { const tx = db.transaction("fotos", modo), r = fn(tx.objectStore("fotos")); tx.oncomplete = () => res(r && r.result); tx.onerror = () => rej(tx.error); tx.onabort = () => rej(tx.error); });
+    },
+    async listarFotos() {
+      if (this.modo === "nube") { const q = await this.refFotos().orderBy("fecha", "desc").limit(200).get(); return q.docs.map((d) => ({ ...d.data(), id: d.id })); }
+      return (await this.idbOp("readonly", (st) => st.getAll())) || [];
+    },
+    async agregarFoto(f) {
+      if (this.modo === "nube") { await this.refFotos().doc(f.id).set(f); return; }
+      await this.idbOp("readwrite", (st) => st.put(f));
+    },
+    async borrarFoto(id) {
+      if (this.modo === "nube") { await this.refFotos().doc(id).delete(); return; }
+      await this.idbOp("readwrite", (st) => st.delete(id));
+    },
     async borrarSesion(id) {
       if (this.modo === "nube") { await this.refHistorial().doc(id).delete(); return; }
       this.escribirLocal("pulso.historial", this.leerLocal("pulso.historial", []).filter((s) => s.id !== id));
@@ -235,7 +287,9 @@
   const S = {
     vista: { t: "catalogo" }, pila: [], busqueda: "", categoria: null,
     estado: { v: 1, miRutina: [], config: {}, activa: null },
-    historial: [], listo: false, abiertas: {}, tabDetalle: "animacion", vistaAnatomia: 180, errorAlmacen: null
+    historial: [], fotos: [], fotosListas: false, mapa: { sel: null, az: 0 },
+    progreso: { vista: "frente", filtro: null, cmp: [], guia: false, fecha: "" },
+    listo: false, abiertas: {}, tabDetalle: "animacion", vistaAnatomia: 180, errorAlmacen: null
   };
   const sugerida = (f) => ({ series: f.series, repsMin: f.repsMin, repsMax: f.repsMax, descanso: f.descansoSeg });
   function validaConfig(c) {
@@ -352,27 +406,40 @@
         default: return rotX(-f);
       }
     }
-    const COLOR = { cuerpo: 0x334761, neutro: 0x4d6687, principal: 0xff4033, secundario: 0xff9926 };
+    const COLOR = { cuerpo: 0x334761, neutro: 0x6f89ad, piel: 0xd6a381, ropa: 0x16181e, calzado: 0xe8eaee, ojos: 0x0e0e12, principal: 0xff4033, secundario: 0xff9926, seleccion: 0x2ef2a0 };
+    const CUBIERTOS = new Set(["gluteos", "cuadriceps", "isquiotibiales", "aductores"]);
     const bin = Uint8Array.from(atob(D.bin), (c) => c.charCodeAt(0)).buffer;
-    const musculos = {}, mallasMusculo = [];
+    const musculos = {}, todas = [], porRol = { piel: [], ropa: [], calzado: [], ojos: [] };
     for (const p of D.manifiesto.partes) {
       const g = new THREE.BufferGeometry();
       g.setAttribute("position", new THREE.BufferAttribute(new Float32Array(bin, p.o, p.v * 3), 3));
       g.setAttribute("normal", new THREE.BufferAttribute(new Float32Array(bin, p.o + p.v * 12, p.v * 3), 3));
       g.setIndex(new THREE.BufferAttribute(new Uint32Array(bin, p.o + p.v * 24, p.i), 1));
       const esM = p.rol === "musculo";
-      const m = new THREE.MeshStandardMaterial({ color: esM ? COLOR.neutro : COLOR.cuerpo, roughness: 0.55, metalness: 0.05, emissive: 0x000000 });
+      const m = new THREE.MeshStandardMaterial({ color: esM ? COLOR.neutro : COLOR[p.rol] || COLOR.piel, roughness: p.rol === "calzado" ? 0.45 : 0.62, metalness: 0.03, emissive: 0x000000, transparent: p.rol === "ropa" });
       const mesh = new THREE.Mesh(g, m);
-      if (esM) { mesh.userData.musculo = p.musculo; (musculos[p.musculo] = musculos[p.musculo] || []).push(m); mallasMusculo.push(mesh); }
+      if (esM) { mesh.userData.musculo = p.musculo; (musculos[p.musculo] = musculos[p.musculo] || []).push(mesh); }
+      else if (porRol[p.rol]) porRol[p.rol].push(mesh);
+      todas.push(mesh);
       (p.junta === "raiz" ? raiz : J[p.junta]).add(mesh);
     }
+    /* Dos aspectos: «piel» (cuerpo vestido; en el ejercicio solo se ven los músculos marcados) y «anatomia»
+       (sin ropa, todos los músculos visibles en gris azulado). Si se marca un músculo que queda bajo el short,
+       el short se vuelve translúcido para que se vea. */
+    E.look = "piel";
     E.resaltar = (f) => {
-      const prin = new Set(f ? f.musculosPrincipales : []), sec = new Set(f ? f.musculosSecundarios : []);
-      for (const [id, mats] of Object.entries(musculos)) {
-        const c = prin.has(id) ? COLOR.principal : sec.has(id) ? COLOR.secundario : COLOR.neutro;
-        const brillo = id === E.seleccionado ? 0.9 : prin.has(id) ? 0.35 : sec.has(id) ? 0.3 : 0;
-        for (const m of mats) { m.color.setHex(c); m.emissive.setHex(brillo > 0 ? c : 0); m.emissiveIntensity = brillo; }
+      const prin = new Set(f ? f.musculosPrincipales : []), sec = new Set(f ? f.musculosSecundarios : []), anat = E.look === "anatomia";
+      let cubierto = false;
+      for (const [id, mallas] of Object.entries(musculos)) {
+        const esSel = id === E.seleccionado, marcado = prin.has(id) || sec.has(id) || esSel;
+        const c = prin.has(id) ? COLOR.principal : sec.has(id) ? COLOR.secundario : esSel ? COLOR.seleccion : COLOR.neutro;
+        const brillo = esSel ? 0.55 : prin.has(id) ? 0.35 : sec.has(id) ? 0.3 : 0;
+        if (marcado && CUBIERTOS.has(id)) cubierto = true;
+        for (const mesh of mallas) { mesh.visible = anat || marcado; mesh.material.color.setHex(c); mesh.material.emissive.setHex(brillo > 0 ? c : 0); mesh.material.emissiveIntensity = brillo; }
       }
+      for (const mesh of porRol.piel) mesh.material.color.setHex(anat ? COLOR.cuerpo : COLOR.piel);
+      for (const mesh of porRol.ropa) { mesh.visible = !anat; mesh.material.opacity = cubierto ? 0.18 : 1; mesh.material.depthWrite = !cubierto; }
+      for (const mesh of porRol.calzado) mesh.visible = !anat;
     };
     E.aplicar = (pose) => {
       raiz.position.set(pose.raiz.pos[0], pose.raiz.pos[1], pose.raiz.pos[2]);
@@ -451,8 +518,8 @@
     }
     /* Configura el maniquí para un ejercicio ("ejercicio") o para estudiar anatomía ("anatomia") */
     E.configurar = (f, modo, azimut) => {
-      E.ficha = f; E.modo = modo || "ejercicio"; E.seleccionado = null;
-      if (E.modo === "anatomia") {
+      E.ficha = f; E.modo = modo || "ejercicio"; E.seleccionado = null; E.look = E.modo === "ejercicio" ? "piel" : "anatomia";
+      if (E.modo !== "ejercicio") {
         construirEquipo(null); E.resaltar(f); E.aplicar(POSE_NEUTRA); E.vistaAzimut = azimut == null ? 180 : azimut;
         colocarCamara(E.vistaAzimut, 1.0, 3.0, 0.95);
       } else {
@@ -461,11 +528,11 @@
       }
     };
     E.vista = (azimut) => {
-      const f = E.ficha; if (!f) return; E.vistaAzimut = azimut;
-      if (E.modo === "anatomia") colocarCamara(azimut, 1.0, 3.0, 0.95);
+      const f = E.ficha; if (E.modo === "ejercicio" && !f) return; E.vistaAzimut = azimut;
+      if (E.modo !== "ejercicio") colocarCamara(azimut, 1.0, 3.0, 0.95);
       else colocarCamara(azimut, 1.05, f.camara.distancia, f.camara.objetivoY);
     };
-    E.reiniciarCamara = () => { const f = E.ficha; if (!f) return; if (E.modo === "anatomia") colocarCamara(E.vistaAzimut == null ? 180 : E.vistaAzimut, 1.0, 3.0, 0.95); else { const c = f.camara; colocarCamara(E.vistaAzimut == null ? c.azimut : E.vistaAzimut, E.vistaAzimut == null ? c.altura : 1.05, c.distancia, c.objetivoY); } };
+    E.reiniciarCamara = () => { const f = E.ficha; if (E.modo === "ejercicio" && !f) return; if (E.modo !== "ejercicio") colocarCamara(E.vistaAzimut == null ? 180 : E.vistaAzimut, 1.0, 3.0, 0.95); else { const c = f.camara; colocarCamara(E.vistaAzimut == null ? c.azimut : E.vistaAzimut, E.vistaAzimut == null ? c.altura : 1.05, c.distancia, c.objetivoY); } };
     E.montar = (host) => {
       E.host = host; host.insertBefore(renderer.domElement, host.firstChild); E.montado = true; E.ajustar();
       if (E.ro) E.ro.disconnect(); E.ro = new ResizeObserver(() => E.ajustar()); E.ro.observe(host);
@@ -491,14 +558,27 @@
       miniaturas[clave] = url; E.ficha = guardada.ficha; E.modo = guardada.modo;
       return url;
     };
+    /* Imagen del maniquí de pie (guía de poses de Progreso). */
+    const instantaneas = {};
+    E.instantanea = (azimut) => {
+      if (instantaneas[azimut]) return instantaneas[azimut];
+      if (E.montado) return null;
+      const guardada = { ficha: E.ficha, modo: E.modo };
+      E.configurar(null, "mapa", azimut); E.look = "piel"; E.resaltar(null);
+      renderer.setSize(240, 240, false); camera.aspect = 1; camera.updateProjectionMatrix(); colocarCamara(azimut, 1.0, 3.6, 0.9, 1);
+      renderer.setClearColor(0x0b1626, 1); renderer.render(scene, camera);
+      const url = renderer.domElement.toDataURL("image/jpeg", 0.85); renderer.setClearColor(0x000000, 0);
+      instantaneas[azimut] = url; E.ficha = guardada.ficha; E.modo = guardada.modo;
+      return url;
+    };
     const rayo = new THREE.Raycaster(), puntero = new THREE.Vector2(); let inicio = null;
     renderer.domElement.addEventListener("pointerdown", (e) => { inicio = [e.clientX, e.clientY]; });
     renderer.domElement.addEventListener("pointerup", (e) => {
       if (!E.alTocar || !inicio || Math.hypot(e.clientX - inicio[0], e.clientY - inicio[1]) > 6) return;
       const r = renderer.domElement.getBoundingClientRect();
       puntero.set(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1); rayo.setFromCamera(puntero, camera);
-      const golpe = rayo.intersectObjects(mallasMusculo, false)[0];
-      E.alTocar(golpe ? golpe.object.userData.musculo : null);
+      const golpe = rayo.intersectObjects(todas.filter((x) => x.visible), false)[0];
+      E.alTocar(golpe && golpe.object.userData.musculo ? golpe.object.userData.musculo : null);
     });
     E.dibujar = () => { controls.update(); renderer.render(scene, camera); };
   }
@@ -616,6 +696,126 @@
       '<p class="small muted">Series, repeticiones y descansos son valores sugeridos; ajústalos a tu nivel.</p>';
   }
 
+  /* ---------- Mapa del cuerpo ---------- */
+  const ejerciciosDe = (m) => ({ pr: CATALOGO.filter((f) => f.musculosPrincipales.includes(m)), se: CATALOGO.filter((f) => f.musculosSecundarios.includes(m)) });
+  const MUSCULOS_POSTERIORES = new Set(["triceps", "dorsales", "trapecio", "lumbar", "gluteos", "isquiotibiales", "gemelos", "deltoides_posterior"]);
+  function panelMusculo() {
+    const m = S.mapa.sel;
+    if (!m) return '<div class="muted">Toca un músculo del muñeco, o elígelo en la lista de abajo, para ver qué ejercicios lo trabajan.</div>';
+    const { pr, se } = ejerciciosDe(m);
+    const fila = (f, rol, color) => '<button class="fila-ej" data-abrir="' + f.id + '"><i class="dot" style="background:' + color + ';margin:0"></i><span class="info"><span class="nombre" style="display:block">' + esc(f.nombre) + '</span><span class="small muted">' + esc(f.categoria) + " · " + rol + '</span></span><span class="neon">›</span></button>';
+    return '<h3>' + MUSCULO[m][0] + '</h3><div class="muted" style="margin-bottom:10px">' + MUSCULO[m][1] + "</div>" +
+      (pr.length + se.length ? '<div class="eyebrow">' + pr.length + " principal" + (pr.length === 1 ? "" : "es") + " · " + se.length + " secundario" + (se.length === 1 ? "" : "s") + '</div><div class="stack">' +
+        pr.map((f) => fila(f, "Principal", "var(--red)")).join("") + se.map((f) => fila(f, "Secundario", "var(--orange)")).join("") + "</div>"
+        : '<div class="card" style="background:var(--panel-2)">Aún no hay ejercicios para este músculo en el catálogo. Cuando agregues uno aparecerá aquí.</div>') +
+      (pr.length === 0 && se.length ? '<div class="small muted" style="margin-top:8px">Este músculo solo trabaja como apoyo en el catálogo actual.</div>' : "");
+  }
+  function vMapa() {
+    const cuenta = (m) => { const e = ejerciciosDe(m); return e.pr.length; };
+    const sinPrincipal = Object.keys(MUSCULO).filter((m) => cuenta(m) === 0);
+    const az = S.mapa.az;
+    return '<div class="top"><div><h2>Mapa del cuerpo</h2><div class="small muted">Toca un músculo y mira sus ejercicios</div></div></div>' +
+      '<div class="stage" id="stage"><div class="overlay top"><div class="views">' + [[0, "Frente"], [90, "Perfil"], [180, "Espalda"]].map(([a, t]) => '<button class="chip" data-vista="' + a + '" aria-pressed="' + (az === a) + '">' + t + "</button>").join("") + '</div>' +
+      '<button class="icono" data-accion="camara" aria-label="Restablecer cámara">' + ICO.reiniciar + '</button></div><div class="overlay bottom"><span class="hint">Toca un músculo · arrastra para girar</span></div></div>' +
+      '<section class="card" id="panelMusculo">' + panelMusculo() + "</section>" +
+      '<section class="card"><div class="eyebrow">Todos los músculos</div><div class="muscles">' +
+      Object.keys(MUSCULO).map((m) => '<button class="chip muscle-chip' + (cuenta(m) ? "" : " vacio") + '" data-musculo="' + m + '" aria-pressed="' + (S.mapa.sel === m) + '">' + MUSCULO[m][0] + " <small>" + cuenta(m) + "</small></button>").join("") + "</div>" +
+      '<p class="small muted" style="margin:10px 0 0">El número es la cantidad de ejercicios del catálogo donde ese músculo es principal. ' +
+      (sinPrincipal.length ? "Sin ejercicio principal todavía: " + sinPrincipal.map((m) => MUSCULO[m][0]).join(", ") + "." : "Todos los músculos tienen al menos un ejercicio principal.") + "</p></section>" +
+      '<p class="small muted">' + "Visualización educativa: relaciona cada músculo con los ejercicios del catálogo. No mide activación real ni es una valoración médica.</p>";
+  }
+  function seleccionarMusculo(m) {
+    S.mapa.sel = m;
+    if (m && hay3D) {
+      const az = S.mapa.az;
+      const nuevo = MUSCULOS_POSTERIORES.has(m) ? (az === 0 ? 180 : az) : (m === "deltoides_lateral" || m === "antebrazos") ? az : (az === 180 ? 0 : az);
+      if (nuevo !== az) { S.mapa.az = nuevo; E.vista(nuevo); document.querySelectorAll(".views [data-vista]").forEach((b) => b.setAttribute("aria-pressed", String(Number(b.dataset.vista) === nuevo))); }
+    }
+    if (hay3D) { E.seleccionado = m; E.resaltar(null); }
+    const p = $("panelMusculo"); if (p) p.innerHTML = panelMusculo();
+    document.querySelectorAll("[data-musculo]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.musculo === m)));
+  }
+
+  /* ---------- Progreso fotográfico ---------- */
+  const hoyISO = () => { const d = new Date(); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); };
+  const msDeISO = (iso) => { const [a, m, d] = iso.split("-").map(Number); return new Date(a, m - 1, d, 12).getTime(); };
+  const fmtDia = (ms) => new Date(ms).toLocaleDateString("es", { day: "numeric", month: "short", year: "numeric" });
+  const VISTAS_FOTO = [["frente", "Frente"], ["perfil", "Perfil"], ["espalda", "Espalda"]];
+  const nombreVista = (v) => (VISTAS_FOTO.find((x) => x[0] === v) || [0, v])[1];
+  const fotosOrdenadas = () => S.fotos.slice().sort((a, b) => b.fecha - a.fecha || (b.id > a.id ? 1 : -1));
+  function vProgreso() {
+    const P = S.progreso; if (!P.fecha) P.fecha = hoyISO();
+    const lista = fotosOrdenadas().filter((f) => !P.filtro || f.vista === P.filtro);
+    const elegidas = P.cmp.map((id) => S.fotos.find((f) => f.id === id)).filter(Boolean).sort((a, b) => a.fecha - b.fecha);
+    let cmp = "";
+    if (elegidas.length === 2) {
+      const [a, b] = elegidas, dias = Math.round((b.fecha - a.fecha) / 86400000);
+      cmp = '<section class="card stack"><div class="eyebrow">Comparación</div><div class="comparar">' +
+        elegidas.map((f, i) => '<figure><img src="' + f.img + '" alt="' + (i ? "Después" : "Antes") + ': ' + nombreVista(f.vista) + '"><figcaption><b>' + (i ? "Después" : "Antes") + "</b> · " + fmtDia(f.fecha) + " · " + nombreVista(f.vista) + "</figcaption></figure>").join("") + "</div>" +
+        '<div class="small muted">' + (dias === 0 ? "Mismo día." : dias + " día" + (dias === 1 ? "" : "s") + " de diferencia.") + (a.vista !== b.vista ? " Ojo: son vistas distintas (" + nombreVista(a.vista) + " y " + nombreVista(b.vista) + "); compara la misma vista." : "") + "</div>" +
+        '<button class="btn sec" data-accion="limpiarcmp">Quitar comparación</button></section>';
+    } else if (elegidas.length === 1) cmp = '<section class="card muted small">Elige una segunda foto con «Comparar» para verlas lado a lado.</section>';
+    const guia = P.guia ? '<div class="stack"><div class="guia-fig">' + [[0, "Frente"], [90, "Perfil"], [180, "Espalda"]].map(([a, t]) => '<figure><img alt="Pose de ' + t + '" data-snap="' + a + '">' + t + "</figure>").join("") + "</div>" +
+      '<ul class="lista-pt bueno"><li>Misma hora del día y misma luz (de preferencia luz natural frontal, sin filtros).</li><li>Misma distancia (unos 2 m) con la cámara a la altura del pecho o el ombligo.</li><li>Mismo fondo liso y ropa parecida (shorts ajustados).</li><li>Pies a la anchura de la cadera, brazos relajados a los lados, mirada al frente.</li><li>Postura natural: sin flexionar ni contraer; de perfil, brazos ligeramente adelantados.</li><li>Cada 2–4 semanas, en las mismas condiciones (por ejemplo, en ayunas por la mañana).</li></ul></div>' : "";
+    return '<div class="top"><div><h2>Evolución fotográfica</h2><div class="small muted">Frente, perfil y espalda por fecha</div></div></div>' +
+      '<section class="card stack"><div class="eyebrow">Añadir foto</div><div class="tabs" id="vistaFoto">' + VISTAS_FOTO.map(([k, t]) => '<button class="chip" data-vfoto="' + k + '" aria-pressed="' + (P.vista === k) + '">' + t + "</button>").join("") + "</div>" +
+      '<label class="small muted" for="fechaFoto">Fecha de la foto</label><input id="fechaFoto" type="date" value="' + P.fecha + '" max="' + hoyISO() + '">' +
+      '<input id="archivoFoto" type="file" accept="image/*" hidden><button class="btn" data-accion="elegirfoto"' + (S.fotosListas ? "" : " disabled") + '>Tomar o elegir foto</button>' +
+      '<div class="small muted">Tu foto se reduce de tamaño y se guarda ' + (Almacen.modo === "nube" ? "solo en tu cuenta (privada)" : "solo en este navegador") + '. No se analiza el cuerpo con IA ni se comparte con nadie.</div></section>' +
+      '<section class="card stack"><button class="chip" style="justify-self:start" data-accion="guia" aria-pressed="' + P.guia + '">Guía para repetir la pose</button>' + guia + "</section>" +
+      cmp +
+      '<div class="tabs" id="filtroFotos"><button class="chip" data-ffoto="" aria-pressed="' + (P.filtro === null) + '">Todas</button>' + VISTAS_FOTO.map(([k, t]) => '<button class="chip" data-ffoto="' + k + '" aria-pressed="' + (P.filtro === k) + '">' + t + "</button>").join("") + "</div>" +
+      (!S.fotosListas ? '<div class="card muted">Cargando tus fotos…</div>' : !lista.length ? '<div class="card muted">' + (S.fotos.length ? "No hay fotos de esta vista." : "Aún no hay fotos. Sube la primera para empezar a comparar tu evolución.") + "</div>" :
+        '<div class="galeria">' + lista.map((f) => '<button class="foto' + (P.cmp.includes(f.id) ? " sel" : "") + '" data-foto="' + esc(f.id) + '" aria-label="' + nombreVista(f.vista) + ", " + fmtDia(f.fecha) + '"><img src="' + f.img + '" alt=""><span>' + nombreVista(f.vista) + " · " + new Date(f.fecha).toLocaleDateString("es", { day: "numeric", month: "short" }) + "</span></button>").join("") + "</div>") +
+      (P.abierta && S.fotos.find((f) => f.id === P.abierta) ? (() => { const f = S.fotos.find((x) => x.id === P.abierta);
+        return '<section class="card stack"><div class="eyebrow">' + nombreVista(f.vista) + " · " + fmtDia(f.fecha) + '</div><img src="' + f.img + '" alt="Foto de ' + nombreVista(f.vista) + '" style="width:100%;border-radius:12px">' +
+          '<div class="fila"><button class="btn sec" data-comparar="' + esc(f.id) + '">' + (P.cmp.includes(f.id) ? "Quitar de la comparación" : "Comparar") + '</button><button class="btn sec" data-guardarfoto="' + esc(f.id) + '">Guardar imagen</button></div>' +
+          '<button class="btn peligro" data-borrarfoto="' + esc(f.id) + '">Borrar esta foto</button></section>'; })() : (lista.length ? '<p class="small muted">Toca una foto para verla, compararla, guardarla o borrarla.</p>' : "")) +
+      '<section class="card stack"><div class="eyebrow">Tus datos</div><button class="btn sec" data-accion="exportar"' + (S.fotos.length ? "" : " disabled") + '>Exportar registros (JSON)</button>' +
+      '<button class="btn peligro" data-accion="borrartodas"' + (S.fotos.length ? "" : " disabled") + '>Borrar todas las fotos</button></section>' + estadoAlmacen();
+  }
+  async function cargarFotos() {
+    if (S.fotosListas || !S.listo) return;
+    try { S.fotos = await Almacen.listarFotos(); } catch (e) { aviso("No se pudieron leer tus fotos: " + ((e && e.message) || "error")); S.fotos = []; }
+    S.fotosListas = true; if (S.vista.t === "progreso") render(false);
+  }
+  /* Reduce la foto para que quepa en un documento (<256 KiB): máx. 900 px y calidad JPEG decreciente. */
+  function procesarImagen(archivo) {
+    return new Promise((res, rej) => {
+      const url = URL.createObjectURL(archivo), img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        let escala = Math.min(1, 900 / Math.max(img.naturalWidth, img.naturalHeight));
+        for (let intento = 0; intento < 6; intento++) {
+          const c = document.createElement("canvas"); c.width = Math.max(1, Math.round(img.naturalWidth * escala)); c.height = Math.max(1, Math.round(img.naturalHeight * escala));
+          c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+          for (const q of [0.78, 0.66, 0.55, 0.45]) { const u = c.toDataURL("image/jpeg", q); if (u.length < 170000) return res(u); }
+          escala *= 0.8;
+        }
+        rej(new Error("La imagen es demasiado grande."));
+      };
+      img.onerror = () => { URL.revokeObjectURL(url); rej(new Error("No se pudo leer la imagen (formato no compatible).")); };
+      img.src = url;
+    });
+  }
+  async function guardarArchivo(nombre, datos) {
+    try {
+      const dl = window.claude && window.claude.use ? await window.claude.use("downloads") : null;
+      if (!dl) return aviso("Guardar archivos no está disponible en esta vista.");
+      await dl.save({ filename: nombre, data: datos }); aviso("Archivo guardado");
+    } catch (e) { if (!e || e.code !== "declined") aviso("No se pudo guardar el archivo."); }
+  }
+  const dataUrlABlob = (u) => { const [h, b] = u.split(","), mime = /data:([^;]+)/.exec(h)[1], bin = atob(b), a = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) a[i] = bin.charCodeAt(i); return new Blob([a], { type: mime }); };
+  async function agregarFotoDesdeArchivo(archivo) {
+    if (!archivo) return;
+    const P = S.progreso;
+    try {
+      const img = await procesarImagen(archivo);
+      const f = { id: "f" + Date.now(), fecha: msDeISO(P.fecha || hoyISO()), vista: P.vista, img };
+      await Almacen.agregarFoto(f); S.fotos.push(f); P.abierta = f.id; aviso("Foto guardada"); render(false);
+    } catch (e) { aviso("No se pudo guardar la foto: " + ((e && e.message) || "error")); }
+  }
+
   function volumen(s) { return (s.series || []).reduce((a, x) => a + x.reps * x.peso, 0); }
   function vHistorial() {
     const l = S.historial;
@@ -651,17 +851,17 @@
   }
 
   /* =====================  RENDER Y NAVEGACIÓN  ===================== */
-  function tabActiva() { const t = S.vista.t; return t === "rutinas" || t === "rutina" ? "rutinas" : t === "historial" ? "historial" : "catalogo"; }
+  function tabActiva() { const t = S.vista.t; return t === "rutinas" || t === "rutina" ? "rutinas" : t === "historial" ? "historial" : t === "mapa" ? "mapa" : t === "progreso" ? "progreso" : "catalogo"; }
   function render(reiniciarScroll) {
     const t = S.vista.t, v = $("vista");
     if (hay3D && E.montado) E.desmontar();
-    v.innerHTML = t === "catalogo" ? vCatalogo() : t === "detalle" ? vDetalle() : t === "rutinas" ? vRutinas() : t === "rutina" ? vRutina() : t === "historial" ? vHistorial() : vSesion();
+    v.innerHTML = t === "catalogo" ? vCatalogo() : t === "detalle" ? vDetalle() : t === "rutinas" ? vRutinas() : t === "rutina" ? vRutina() : t === "historial" ? vHistorial() : t === "mapa" ? vMapa() : t === "progreso" ? vProgreso() : vSesion();
     $("tabbar").hidden = t === "sesion";
     document.querySelectorAll("#tabbar button").forEach((b) => { if (b.dataset.ir === tabActiva()) b.setAttribute("aria-current", "page"); else b.removeAttribute("aria-current"); });
     const a = S.estado.activa, fr = $("franja");
     fr.hidden = !(a && t !== "sesion");
     if (!fr.hidden) fr.innerHTML = '<button data-accion="continuar"><span>Entrenamiento en curso · ' + esc(a.nombre) + '</span><b>Continuar ›</b></button>';
-    montarEscenario(); pedirMiniaturas(); actualizarSesion();
+    montarEscenario(); pedirMiniaturas(); actualizarSesion(); if (t === "progreso") { cargarFotos(); pedirInstantaneas(); }
     if (reiniciarScroll) window.scrollTo(0, 0);
   }
   function montarEscenario() {
@@ -671,6 +871,9 @@
     if (t === "sesion") {
       const p = S.estado.activa.plan[S.estado.activa.idx], f = porId(p.f);
       E.alTocar = null; E.configurar(f, "ejercicio"); if (!R.ficha || R.ficha.id !== f.id) ponerEjercicio(f); R.velocidad = 1;
+    } else if (t === "mapa") {
+      E.configurar(null, "mapa", S.mapa.az); E.seleccionado = S.mapa.sel; E.resaltar(null);
+      E.alTocar = (m) => seleccionarMusculo(m);
     } else if (S.tabDetalle === "anatomia") {
       const f = porId(S.vista.id); E.configurar(f, "anatomia", S.vistaAnatomia);
       E.alTocar = (m) => {
@@ -686,6 +889,10 @@
       R.faseMostrada = -1;
     }
     if (hay3D) E.ajustar();
+  }
+  function pedirInstantaneas() {
+    if (!hay3D || E.montado) return;
+    document.querySelectorAll("img[data-snap]").forEach((x) => { const u = E.instantanea(Number(x.dataset.snap)); if (u) x.src = u; });
   }
   let hiloMiniaturas = 0;
   function pedirMiniaturas() {
@@ -784,8 +991,21 @@
     if (d.cat !== undefined && b.closest("#filtros")) { S.categoria = d.cat === "" ? null : d.cat; return render(false); }
     if (d.tab) { S.tabDetalle = d.tab; return render(false); }
     if (d.verfase !== undefined) { S.tabDetalle = "animacion"; S.vista = { ...S.vista, fase: Number(d.verfase) }; return render(true); }
+    if (d.musculo) return seleccionarMusculo(S.mapa.sel === d.musculo && b.closest("#panelMusculo") ? null : d.musculo);
+    if (d.vfoto) { S.progreso.vista = d.vfoto; return render(false); }
+    if (d.ffoto !== undefined) { S.progreso.filtro = d.ffoto === "" ? null : d.ffoto; return render(false); }
+    if (d.foto) { S.progreso.abierta = S.progreso.abierta === d.foto ? null : d.foto; return render(false); }
+    if (d.comparar) { const c = S.progreso.cmp, i = c.indexOf(d.comparar); if (i >= 0) c.splice(i, 1); else { c.push(d.comparar); if (c.length > 2) c.shift(); } return render(false); }
+    if (d.guardarfoto) { const f = S.fotos.find((x) => x.id === d.guardarfoto); if (f) await guardarArchivo("pulso-" + f.vista + "-" + new Date(f.fecha).toISOString().slice(0, 10) + ".jpg", dataUrlABlob(f.img)); return; }
+    if (d.borrarfoto) {
+      if (!(await confirmar("¿Borrar esta foto? No se puede deshacer.", "Borrar", true))) return;
+      try { await Almacen.borrarFoto(d.borrarfoto); S.fotos = S.fotos.filter((x) => x.id !== d.borrarfoto); S.progreso.cmp = S.progreso.cmp.filter((x) => x !== d.borrarfoto); if (S.progreso.abierta === d.borrarfoto) S.progreso.abierta = null; aviso("Foto borrada"); render(false); }
+      catch (er) { aviso("No se pudo borrar: " + ((er && er.message) || "error")); }
+      return;
+    }
     if (d.vista !== undefined) {
       const az = Number(d.vista);
+      if (S.vista.t === "mapa") { S.mapa.az = az; document.querySelectorAll(".views [data-vista]").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); if (hay3D) E.vista(az); return; }
       if (S.tabDetalle === "anatomia" && S.vista.t === "detalle") { S.vistaAnatomia = az; return render(false); }
       if (hay3D) E.vista(az); return;
     }
@@ -814,6 +1034,19 @@
     if (d.reps) { const a = S.estado.activa; a.reps = num(a.reps + Number(d.reps), 1, 100, a.reps); $("reps").textContent = a.reps; return; }
     switch (d.accion) {
       case "atras": return atras();
+      case "elegirfoto": { const i = $("archivoFoto"); if (i) i.click(); return; }
+      case "guia": S.progreso.guia = !S.progreso.guia; return render(false);
+      case "limpiarcmp": S.progreso.cmp = []; return render(false);
+      case "exportar": {
+        const reg = { app: "Pulso Gym", exportado: new Date().toISOString(), fotos: fotosOrdenadas().map((f) => ({ id: f.id, fecha: new Date(f.fecha).toISOString().slice(0, 10), vista: f.vista })) };
+        return guardarArchivo("pulso-progreso.json", JSON.stringify(reg, null, 2));
+      }
+      case "borrartodas": {
+        if (!(await confirmar("¿Borrar TODAS tus fotos de progreso? No se puede deshacer.", "Borrar todo", true))) return;
+        try { for (const f of S.fotos.slice()) await Almacen.borrarFoto(f.id); S.fotos = []; S.progreso.cmp = []; S.progreso.abierta = null; aviso("Fotos borradas"); }
+        catch (er) { aviso("No se pudieron borrar todas: " + ((er && er.message) || "error")); S.fotosListas = false; cargarFotos(); }
+        return render(false);
+      }
       case "play": R.reproduciendo = !R.reproduciendo; return;
       case "camara": return hay3D && E.reiniciarCamara();
       case "agregar": case "actualizar": {
@@ -838,7 +1071,9 @@
     else if (e.target.id === "seek") { R.reproduciendo = false; R.tiempo = (Number(e.target.value) / 1000) * durF(R.ficha); }
     else if (e.target.id === "peso") { const a = S.estado.activa; if (a) a.peso = Number(e.target.value); }
   });
-  document.addEventListener("change", (e) => { if (e.target.id === "peso" && S.estado.activa) guardar(); });
+  document.addEventListener("change", (e) => {
+    if (e.target.id === "fechaFoto") { S.progreso.fecha = e.target.value || hoyISO(); return; }
+    if (e.target.id === "archivoFoto") { const a = e.target.files && e.target.files[0]; e.target.value = ""; agregarFotoDesdeArchivo(a); return; } if (e.target.id === "peso" && S.estado.activa) guardar(); });
 
   /* =====================  ARRANQUE  ===================== */
   render(false);
@@ -853,6 +1088,7 @@
       S.historial = await Almacen.listarSesiones();
     } catch (er) { S.errorAlmacen = (er && er.message) || "error"; aviso("No se pudieron leer tus datos guardados."); }
     S.listo = true;
+    if (S.vista.t === "progreso") cargarFotos();
     if (S.estado.activa && S.vista.t !== "sesion") { /* la franja «Continuar» aparece sola */ }
     render(false);
   })();

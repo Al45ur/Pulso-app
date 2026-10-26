@@ -20,8 +20,13 @@ enum Medidas {
 }
 
 enum Paleta {
-    static let cuerpo = UIColor(red: 0.20, green: 0.28, blue: 0.38, alpha: 1)
-    static let musculoNeutro = UIColor(red: 0.30, green: 0.40, blue: 0.53, alpha: 1)
+    static let cuerpo = UIColor(red: 0.20, green: 0.28, blue: 0.38, alpha: 1)       // piel en el aspecto «anatomía»
+    static let musculoNeutro = UIColor(red: 0.435, green: 0.537, blue: 0.678, alpha: 1)
+    static let piel = UIColor(red: 0.84, green: 0.64, blue: 0.51, alpha: 1)
+    static let ropa = UIColor(red: 0.086, green: 0.094, blue: 0.118, alpha: 1)
+    static let calzado = UIColor(red: 0.91, green: 0.92, blue: 0.93, alpha: 1)
+    static let ojos = UIColor(red: 0.055, green: 0.055, blue: 0.07, alpha: 1)
+    static let seleccion = UIColor(red: 0.18, green: 0.95, blue: 0.63, alpha: 1)
     static let principal = UIColor(red: 1.0, green: 0.25, blue: 0.20, alpha: 1)
     static let secundario = UIColor(red: 1.0, green: 0.60, blue: 0.15, alpha: 1)
     static let metal = UIColor(red: 0.82, green: 0.85, blue: 0.9, alpha: 1)
@@ -41,6 +46,10 @@ private func rotY(_ grados: Double) -> simd_quatf {
     simd_quatf(angle: Float(grados * .pi / 180), axis: SIMD3<Float>(0, 1, 0))
 }
 
+/// Aspecto del personaje: «piel» (vestido; en el ejercicio solo se ven los músculos marcados) o
+/// «anatomía» (sin ropa, todos los músculos visibles en gris azulado).
+enum AspectoManiqui { case piel, anatomia }
+
 /// Maniquí humano articulado. Cada articulación es un nodo; al aplicar una `Pose` se giran los nodos,
 /// no se deforma ninguna imagen. Los volúmenes musculares son nodos con nombre «musculo:<id>».
 ///
@@ -54,6 +63,11 @@ final class Maniqui {
     private(set) var manoD = SCNNode()
     private var juntas: [Articulacion: SCNNode] = [:]
     private var volumenes: [Musculo: [SCNNode]] = [:]
+    private var pieles: [SCNNode] = []
+    private var prendas: [SCNNode] = []
+    private var calzados: [SCNNode] = []
+    /// Músculos que quedan debajo del short: si se marca uno, el short se vuelve translúcido.
+    private static let cubiertos: Set<Musculo> = [.gluteos, .cuadriceps, .isquiotibiales, .aductores]
 
     /// Verdadero si se cargó el personaje de Resources/maniqui.*; falso si se usa el maniquí procedural de respaldo.
     private(set) var usaMalla = false
@@ -105,24 +119,41 @@ final class Maniqui {
     // MARK: - Resaltado muscular
 
     /// Pinta de rojo los músculos principales y de naranja los secundarios; el resto queda neutro.
-    func resaltar(principales: Set<Musculo>, secundarios: Set<Musculo>, seleccionado: Musculo? = nil) {
+    func resaltar(principales: Set<Musculo>, secundarios: Set<Musculo>, seleccionado: Musculo? = nil,
+                  aspecto: AspectoManiqui = .piel) {
+        let anatomia = aspecto == .anatomia
+        var cubierto = false
         for (musculo, nodos) in volumenes {
             let color: UIColor
             var brillo: CGFloat = 0
+            let marcado = principales.contains(musculo) || secundarios.contains(musculo) || musculo == seleccionado
             if principales.contains(musculo) {
                 color = Paleta.principal; brillo = 0.35
             } else if secundarios.contains(musculo) {
                 color = Paleta.secundario; brillo = 0.30
+            } else if musculo == seleccionado {
+                color = Paleta.seleccion
             } else {
                 color = Paleta.musculoNeutro
             }
-            if musculo == seleccionado { brillo = 0.95 }
+            if musculo == seleccionado { brillo = 0.55 }
+            if marcado && Self.cubiertos.contains(musculo) { cubierto = true }
             for nodo in nodos {
+                // Con las mallas, en el aspecto «piel» solo se dibujan los músculos marcados.
+                nodo.isHidden = usaMalla && !anatomia && !marcado
                 guard let material = nodo.geometry?.firstMaterial else { continue }
                 material.diffuse.contents = color
                 material.emission.contents = color
                 material.emission.intensity = brillo
             }
+        }
+        pieles.forEach { $0.geometry?.firstMaterial?.diffuse.contents = anatomia ? Paleta.cuerpo : Paleta.piel }
+        calzados.forEach { $0.isHidden = anatomia }
+        for prenda in prendas {
+            prenda.isHidden = anatomia
+            let material = prenda.geometry?.firstMaterial
+            material?.transparency = cubierto ? 0.18 : 1
+            material?.writesToDepthBuffer = !cubierto
         }
     }
 
@@ -222,14 +253,27 @@ final class Maniqui {
             }
             guard let padre else { continue }
 
-            let esMusculo = parte.rol == "musculo"
-            geometria.materials = [material(esMusculo ? Paleta.musculoNeutro : Paleta.cuerpo)]
+            let color: UIColor
+            switch parte.rol {
+            case "musculo": color = Paleta.musculoNeutro
+            case "ropa": color = Paleta.ropa
+            case "calzado": color = Paleta.calzado
+            case "ojos": color = Paleta.ojos
+            default: color = Paleta.piel
+            }
+            geometria.materials = [material(color)]
             let nodo = SCNNode(geometry: geometria)
-            if esMusculo, let id = parte.musculo, let musculo = Musculo(rawValue: id) {
+            if parte.rol == "musculo", let id = parte.musculo, let musculo = Musculo(rawValue: id) {
                 nodo.name = "musculo:" + id
                 volumenes[musculo, default: []].append(nodo)
             } else {
                 nodo.name = parte.nombre
+                switch parte.rol {
+                case "ropa": prendas.append(nodo)
+                case "calzado": calzados.append(nodo)
+                case "ojos": break
+                default: pieles.append(nodo)
+                }
             }
             padre.addChildNode(nodo)
         }

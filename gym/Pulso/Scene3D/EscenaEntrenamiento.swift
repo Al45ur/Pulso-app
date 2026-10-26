@@ -79,7 +79,7 @@ final class EscenaEntrenamiento {
     /// Prepara la escena para un ejercicio: equipo, cámara y músculos resaltados.
     func configurar(ficha: FichaEjercicio) {
         construirEquipo(ficha.props)
-        maniqui.resaltar(principales: ficha.principales, secundarios: ficha.secundarios)
+        maniqui.resaltar(principales: ficha.principales, secundarios: ficha.secundarios, aspecto: .piel)
         let c = ficha.camara
         colocarCamara(azimut: c.azimut, altura: Float(c.altura), distancia: Float(c.distancia), objetivoY: Float(c.objetivoY))
         mostrar(ficha.fases[ficha.faseMiniatura].pose)
@@ -89,7 +89,7 @@ final class EscenaEntrenamiento {
     func configurarAnatomia(ficha: FichaEjercicio?, vista: VistaCamara, seleccionado: Musculo? = nil) {
         construirEquipo([])
         maniqui.resaltar(principales: ficha?.principales ?? [], secundarios: ficha?.secundarios ?? [],
-                         seleccionado: seleccionado)
+                         seleccionado: seleccionado, aspecto: .anatomia)
         colocarCamara(azimut: vista.azimut, altura: 1.0, distancia: 3.0, objetivoY: 0.95)
         mostrar(.neutra)
     }
